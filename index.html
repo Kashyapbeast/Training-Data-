@@ -15,176 +15,41 @@ select,.button{min-height:44px;border:0;border-radius:10px;padding:0 14px;font-s
 .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:18px 0}.kpi{background:#fff;border:1px solid var(--line);border-radius:16px;padding:17px;box-shadow:0 4px 16px rgba(25,45,60,.045);border-top:4px solid var(--blue)}.kpi:nth-child(2){border-top-color:var(--teal)}.kpi:nth-child(3){border-top-color:var(--orange)}.kpi:nth-child(4){border-top-color:var(--purple)}.klabel{font-size:11px;color:var(--muted);font-weight:800}.kvalue{font-size:26px;font-weight:800;margin-top:6px}
 .calendar-card{background:#fff;border:1px solid var(--line);border-radius:17px;overflow:hidden;box-shadow:0 4px 16px rgba(25,45,60,.045)}.cal-top{display:flex;justify-content:space-between;align-items:center;padding:18px 20px;border-bottom:1px solid var(--line)}.cal-title{font-size:20px;font-weight:800}.cal-sub{font-size:12px;color:var(--muted);margin-top:3px}
 .week,.days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr))}.week div{padding:11px 8px;background:#f8fafc;border-right:1px solid #edf0f2;color:#71808b;font-size:10px;font-weight:800}.cell{min-height:135px;padding:8px;border-right:1px solid #edf0f2;border-bottom:1px solid #edf0f2;background:#fff}.cell.muted{background:#fbfcfd}.date{font-size:12px;font-weight:800;color:#657582}
-.event{padding:8px;border-radius:9px;margin-top:7px;font-size:10px;line-height:1.35;border-left:4px solid var(--blue);background:#eaf3ff}.event:nth-child(odd){ }.event strong{display:block;font-size:10.5px;margin-bottom:2px}.event small{color:#60727f}
+.event{padding:8px;border-radius:9px;margin-top:7px;font-size:10px;line-height:1.35;border-left:4px solid var(--blue);background:#eaf3ff}.event strong{display:block;font-size:10.5px;margin-bottom:2px}.event small{color:#60727f}
 .legend{display:flex;gap:16px;flex-wrap:wrap;padding:14px 20px;color:#667583;font-size:10px;border-top:1px solid var(--line)}.legend i{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:5px}.b{background:var(--blue)}.t{background:var(--teal)}.o{background:var(--orange)}.p{background:var(--purple)}
-.unscheduled{margin-top:16px}.unscheduled h3{font-size:16px;margin:0 0 10px}.notice{padding:12px 14px;border:1px solid var(--line);border-radius:11px;background:#fff;font-size:12px;color:var(--muted)}
-.empty{padding:50px;text-align:center;color:var(--muted)}
-.footer{font-size:11px;color:#84919a;text-align:center;margin:14px}
+.unscheduled{margin-top:16px}.notice{padding:12px 14px;border:1px solid var(--line);border-radius:11px;background:#fff;font-size:12px;color:var(--muted)}.footer{font-size:11px;color:#84919a;text-align:center;margin:14px}
 @media(max-width:760px){.app{padding:14px}.hero{padding:22px}.kpis{grid-template-columns:repeat(2,1fr)}.cell{min-height:100px}.event{font-size:9px;padding:6px}.week div{font-size:9px}.cal-top{align-items:flex-start;gap:10px;flex-direction:column}}
 @media print{body{background:#fff}.app{max-width:none;padding:0}.hero{box-shadow:none}.toolbar,.download,.footer{display:none}.calendar-card{box-shadow:none}.cell{min-height:105px}.kpis{break-inside:avoid}}
 </style>
 </head>
 <body>
 <main class="app" id="pdfArea">
-<section class="hero">
-<div class="eyebrow">LEARNING & DEVELOPMENT</div>
-<h1>Trainer Calendar</h1>
-<p id="subtitle">September 2026 · All Trainers</p>
-<div class="toolbar">
-<label>TRAINER<select id="trainer"></select></label>
-<label>MONTH<select id="month"></select></label>
-<button class="button download" id="download">↓ Download PDF</button>
-</div>
-</section>
-
-<section class="kpis">
-<div class="kpi"><div class="klabel">TRAINING SESSIONS</div><div class="kvalue" id="sessions">0</div></div>
-<div class="kpi"><div class="klabel">TRAINING HOURS</div><div class="kvalue" id="hours">0 hrs</div></div>
-<div class="kpi"><div class="klabel">PARTICIPANTS</div><div class="kvalue" id="participants">0</div></div>
-<div class="kpi"><div class="klabel" id="fourthLabel">ACTIVE TRAINERS</div><div class="kvalue" id="fourthValue">0</div></div>
-</section>
-
-<section class="calendar-card">
-<div class="cal-top"><div><div class="cal-title" id="calTitle">September 2026</div><div class="cal-sub" id="calSub">All Trainers</div></div></div>
-<div class="week"><div>MON</div><div>TUE</div><div>WED</div><div>THU</div><div>FRI</div><div>SAT</div><div>SUN</div></div>
-<div class="days" id="days"></div>
-<div class="legend"><span><i class="b"></i>Training session</span><span><i class="t"></i>Online / virtual</span><span><i class="o"></i>Leadership / skills</span><span><i class="p"></i>Technology / digital</span></div>
-</section>
-
-<section class="unscheduled" id="unscheduled"></section>
-<div class="footer">Live dashboard powered by the connected Google Sheet.</div>
+<section class="hero"><div class="eyebrow">LEARNING & DEVELOPMENT</div><h1>Trainer Calendar</h1><p id="subtitle">Loading calendar…</p><div class="toolbar"><label>TRAINER<select id="trainer"></select></label><label>MONTH<select id="month"></select></label><button class="button download" id="download">↓ Download PDF</button></div></section>
+<section class="kpis"><div class="kpi"><div class="klabel">TRAINING SESSIONS</div><div class="kvalue" id="sessions">0</div></div><div class="kpi"><div class="klabel">TRAINING HOURS</div><div class="kvalue" id="hours">0 hrs</div></div><div class="kpi"><div class="klabel">PARTICIPANTS</div><div class="kvalue" id="participants">—</div></div><div class="kpi"><div class="klabel" id="fourthLabel">ACTIVE TRAINERS</div><div class="kvalue" id="fourthValue">0</div></div></section>
+<section class="calendar-card"><div class="cal-top"><div><div class="cal-title" id="calTitle">September 2026</div><div class="cal-sub" id="calSub">Loading…</div></div></div><div class="week"><div>MON</div><div>TUE</div><div>WED</div><div>THU</div><div>FRI</div><div>SAT</div><div>SUN</div></div><div class="days" id="days"></div><div class="legend"><span><i class="b"></i>Training session</span><span><i class="t"></i>Online / virtual</span><span><i class="o"></i>Leadership / skills</span><span><i class="p"></i>Technology / digital</span></div></section>
+<section class="unscheduled" id="unscheduled"></section><div class="footer">Live dashboard powered by the connected Google Sheet.</div>
 </main>
-
 <script>
 const SPREADSHEET_ID="1RlvIAdPGIBWMpAyL3jP6LlUho2Hu7TaU6SwjsrltYQk";
 const SHEET_TABS=["Sheet1","Saif Sir","Vipin Sir","Jyoti Mam","Arsh Sir","Rithtika"];
-const FALLBACK_CSV="data.csv";
-let records=[];
-
-function parseCSV(text){
-  const lines=[];let row=[],cell="",quote=false;
-  for(let i=0;i<text.length;i++){const c=text[i],n=text[i+1];
-    if(c==='"'&&quote&&n==='"'){cell+='"';i++;continue}
-    if(c==='"'){quote=!quote;continue}
-    if(c===','&&!quote){row.push(cell);cell="";continue}
-    if((c==='\n'||c==='\r')&&!quote){if(c==='\r'&&n==='\n')i++;row.push(cell);cell="";if(row.some(x=>x.trim()))lines.push(row);row=[];continue}
-    cell+=c;
-  }
-  if(cell||row.length){row.push(cell);lines.push(row)}
-  if(!lines.length)return [];
-  const headers=lines.shift().map(normalizeHeader);
-  return lines.map(r=>Object.fromEntries(headers.map((h,i)=>[h,(r[i]||'').trim()])))
-    .filter(r=>Object.values(r).some(Boolean));
-}
-function normalizeHeader(v){
-  const s=String(v||'').trim().toLowerCase().replace(/[^a-z0-9]+/g,'');
-  const aliases={trainer:'trainer',trainername:'trainer',trainerfullname:'trainer',trainingname:'trainingName',training:'trainingName',coursename:'trainingName',sessionname:'trainingName',topics:'topics',topic:'topics',date:'date',dates:'date',trainingdate:'date',trainingdates:'date',time:'time',timing:'time',day:'day',days:'day',mode:'mode',deliverymode:'mode',department:'department',dept:'department',participants:'participants',participant:'participants',headcount:'participants',month:'month',monthyear:'month'};
-  return aliases[s]||s;
-}
-function cleanMonth(v){
-  const s=String(v||'').trim();
-  const m=s.match(/(January|February|March|April|May|June|July|August|September|October|November|December)\s+(\d{4})/i);
-  return m ? m[1].replace(/^./,x=>x.toUpperCase())+' '+m[2] : 'September 2026';
-}
-function hoursFromTime(t){
-  const s=String(t||'').toLowerCase().replace(/\s+/g,' ');
-  const m=s.match(/(\d{1,2})(?::(\d{2}))?\s*(am|pm)?\s*(?:to|-)\s*(\d{1,2})(?::(\d{2}))?\s*(am|pm)?/);
-  if(!m)return 0;
-  let a=+m[1]+(+m[2]||0)/60,b=+m[4]+(+m[5]||0)/60;
-  const ap=m[3],bp=m[6]||ap;
-  if(ap==='pm'&&a<12)a+=12;if(ap==='am'&&a===12)a=0;if(bp==='pm'&&b<12)b+=12;if(bp==='am'&&b===12)b=0;
-  return b>a?b-a:0;
-}
-function dateParts(month,day){
-  const d=new Date(month+' 1');if(Number.isNaN(d.getTime()))return null;
-  return {y:d.getFullYear(),m:d.getMonth(),day:+day};
-}
-function parseDays(value,month){
-  const s=String(value||'').trim();if(!s)return [];
-  if(/\d{1,2}[\/-]\d{1,2}[\/-]\d{2,4}/.test(s)||/\d{1,2}\s+(January|February|March|April|May|June|July|August|September|October|November|December)/i.test(s)){
-    const d=new Date(s);return Number.isNaN(d.getTime())?[]:[d.getDate()];
-  }
-  if(/[a-z]/i.test(s))return [];
-  const nums=s.match(/\b\d{1,2}\b/g)||[];const base=new Date(month+' 1');if(Number.isNaN(base.getTime()))return [];
-  const last=new Date(base.getFullYear(),base.getMonth()+1,0).getDate();
-  return [...new Set(nums.map(Number).filter(n=>n>=1&&n<=last))];
-}
-function expanded(){
-  const out=[];
-  for(const r of records){
-    const month=cleanMonth(r.month),nums=parseDays(r.date,month);
-    for(const n of nums){const p=dateParts(month,n);if(p)out.push({...r,...p})}
-  }
-  return out;
-}
-function init(){
-  if(!records.length){document.getElementById('subtitle').textContent='No calendar rows found in the Google Sheet.';return}
-  const trainers=['All Trainers',...new Set(records.map(r=>r.trainer).filter(Boolean))];
-  const months=[...new Set(records.map(r=>cleanMonth(r.month)))].sort((a,b)=>new Date(a)-new Date(b));
-  trainer.innerHTML=trainers.map(x=>`<option>${escapeHtml(x)}</option>`).join('');
-  month.innerHTML=months.map(x=>`<option>${escapeHtml(x)}</option>`).join('');
-  if(months.includes('September 2026'))month.value='September 2026';
-  update();
-}
-function update(){
-  const t=trainer.value,m=month.value;
-  const events=expanded().filter(r=>cleanMonth(r.month)===m&&(t==='All Trainers'||r.trainer===t));
-  const base=records.filter(r=>cleanMonth(r.month)===m&&(t==='All Trainers'||r.trainer===t));
-  const sess=events.length;
-  const hrs=events.reduce((a,e)=>a+hoursFromTime(e.time),0);
-  const part=base.reduce((a,r)=>a+(parseInt(String(r.participants||'').replace(/[^0-9]/g,''),10)||0),0);
-  sessions.textContent=sess;
-  hours.textContent=(Math.round(hrs*10)/10)+' hrs';
-  participants.textContent=part||'—';
-  fourthLabel.textContent=t==='All Trainers'?'ACTIVE TRAINERS':'TRAINER';
-  fourthValue.textContent=t==='All Trainers'?new Set(base.map(r=>r.trainer).filter(Boolean)).size:t;
-  subtitle.textContent=m+' · '+t;calTitle.textContent=m;calSub.textContent=t;
-  renderCalendar(events,m);renderUnscheduled(base);
-}
-function renderCalendar(events,m){
-  const d=new Date(m+' 1'),y=d.getFullYear(),mo=d.getMonth(),first=(d.getDay()+6)%7,last=new Date(y,mo+1,0).getDate(),cells=Math.ceil((first+last)/7)*7;
-  days.innerHTML='';const byDay={};events.forEach(e=>(byDay[e.day]??=[]).push(e));
-  for(let i=0;i<cells;i++){
-    const day=i-first+1,c=document.createElement('div');c.className='cell';
-    if(day<1||day>last){c.classList.add('muted');days.appendChild(c);continue}
-    c.innerHTML=`<div class="date">${day}</div>`;
-    (byDay[day]||[]).forEach((e,j)=>{
-      const cols=['#3e7ca1','#43a99b','#efaa55','#9b78c5'],backs=['#eaf3ff','#e9f8f3','#fff2e3','#f4ebfa'],div=document.createElement('div');
-      div.className='event';div.style.borderLeftColor=cols[j%4];div.style.background=backs[j%4];
-      div.innerHTML=`<strong>${escapeHtml(e.trainingName||'Training')}</strong>${escapeHtml(e.time||'Time not set')}<br><small>${escapeHtml(e.trainer||'')} · ${escapeHtml(e.mode||'')}</small>`;
-      c.appendChild(div);
-    });days.appendChild(c);
-  }
-}
-function renderUnscheduled(base){
-  const pending=base.filter(r=>!parseDays(r.date,r.month).length);
-  unscheduled.innerHTML=pending.length?'<div class="notice"><strong>Needs scheduling:</strong> '+pending.map(r=>escapeHtml(r.trainingName)+' ('+escapeHtml(r.date)+')').join(' · ')+'</div>':'';
-}
+const FALLBACK_CSV="data.csv";let records=[];
+function parseCSV(text){const lines=[];let row=[],cell="",quote=false;for(let i=0;i<text.length;i++){const c=text[i],n=text[i+1];if(c==='"'&&quote&&n==='"'){cell+='"';i++;continue}if(c==='"'){quote=!quote;continue}if(c===','&&!quote){row.push(cell);cell="";continue}if((c==='\n'||c==='\r')&&!quote){if(c==='\r'&&n==='\n')i++;row.push(cell);cell="";if(row.some(x=>x.trim()))lines.push(row);row=[];continue}cell+=c}if(cell||row.length){row.push(cell);lines.push(row)}if(!lines.length)return [];const headers=lines.shift().map(normalizeHeader);return lines.map(r=>Object.fromEntries(headers.map((h,i)=>[h,(r[i]??'').trim()]))).filter(r=>Object.values(r).some(Boolean))}
+function normalizeHeader(v){const s=String(v||'').trim().toLowerCase().replace(/[^a-z0-9]+/g,'');const aliases={trainer:'trainer',trainername:'trainer',trainerfullname:'trainer',trainingname:'trainingName',training:'trainingName',coursename:'trainingName',sessionname:'trainingName',topics:'topics',topic:'topics',date:'date',dates:'date',trainingdate:'date',trainingdates:'date',time:'time',timing:'time',day:'day',days:'day',mode:'mode',deliverymode:'mode',department:'department',dept:'department',participants:'participants',participant:'participants',headcount:'participants',month:'month',monthyear:'month'};return aliases[s]||s}
+function inferMonthFromTab(tab){const s=String(tab||'');const m=s.match(/(January|February|March|April|May|June|July|August|September|October|November|December)\s*(20\d{2})?/i);if(m)return m[1].replace(/^./,x=>x.toUpperCase())+' '+(m[2]||'2026');if(/Rithtika/i.test(s)||/Jyoti/i.test(s))return 'August 2026';return 'September 2026'}
+function cleanMonth(v,fallback='September 2026'){const s=String(v||'').trim();const m=s.match(/(January|February|March|April|May|June|July|August|September|October|November|December)\s*[-\/]?\s*(\d{4})/i);if(m)return m[1].replace(/^./,x=>x.toUpperCase())+' '+m[2];const name=s.match(/(January|February|March|April|May|June|July|August|September|October|November|December)/i);return name?name[1].replace(/^./,x=>x.toUpperCase())+' 2026':fallback}
+function hoursFromTime(t){const s=String(t||'').toLowerCase().replace(/\s+/g,' '),m=s.match(/(\d{1,2})(?::(\d{2}))?\s*(am|pm)?\s*(?:to|-)\s*(\d{1,2})(?::(\d{2}))?\s*(am|pm)?/);if(!m)return 0;let a=+m[1]+(+m[2]||0)/60,b=+m[4]+(+m[5]||0)/60,ap=m[3],bp=m[6]||ap;if(ap==='pm'&&a<12)a+=12;if(ap==='am'&&a===12)a=0;if(bp==='pm'&&b<12)b+=12;if(bp==='am'&&b===12)b=0;return b>a?b-a:0}
+function dateParts(month,day){const d=new Date(month+' 1');if(Number.isNaN(d.getTime()))return null;return{y:d.getFullYear(),m:d.getMonth(),day:+day}}
+function parseDays(value,month){const s=String(value||'').trim();if(!s||/date to be finalized|tentative/i.test(s))return[];const base=new Date(month+' 1');if(Number.isNaN(base.getTime()))return[];const y=base.getFullYear(),mo=base.getMonth(),last=new Date(y,mo+1,0).getDate(),out=[];const ordMap={first:1,second:2,third:3,fourth:4,fifth:5,'1st':1,'2nd':2,'3rd':3,'4th':4,'5th':5};const weekdays={sunday:0,monday:1,tuesday:2,wednesday:3,thursday:4,friday:5,saturday:6};const lower=s.toLowerCase();for(const[name,num]of Object.entries(ordMap)){for(const[wdName,wd]of Object.entries(weekdays)){if(new RegExp('\\b'+name+'\\s+'+wdName+'\\b','i').test(lower)){const first=new Date(y,mo,1),offset=(wd-first.getDay()+7)%7,day=1+offset+(num-1)*7;if(day<=last)out.push(day)}}}const weekdayNames=Object.keys(weekdays);if(/every|all|weekly/i.test(lower)){weekdayNames.forEach(w=>{if(lower.includes(w)){for(let d=1;d<=last;d++){if(new Date(y,mo,d).getDay()===weekdays[w])out.push(d)}}})}const cleaned=s.replace(/\b(?:first|second|third|fourth|fifth|1st|2nd|3rd|4th|5th)(?:\s*(?:or|&|and)\s*(?:first|second|third|fourth|fifth|1st|2nd|3rd|4th|5th))*\s+(?:sunday|monday|tuesday|wednesday|thursday|friday|saturday)\b/gi,'');const explicit=cleaned.match(/\b\d{1,2}\b/g)||[];explicit.forEach(n=>{const d=+n;if(d>=1&&d<=last)out.push(d)});if(!out.length&&/\b(saturdays|saturday)\b/i.test(s)){for(let d=1;d<=last;d++)if(new Date(y,mo,d).getDay()===6)out.push(d)}return[...new Set(out)].sort((a,b)=>a-b)}
+function expanded(){const out=[];for(const r of records){const month=cleanMonth(r.month);for(const day of parseDays(r.date,month)){const p=dateParts(month,day);if(p)out.push({...r,...p})}}return out}
+function init(){if(!records.length){document.getElementById('subtitle').textContent='No calendar rows found in the Google Sheet.';return}const trainers=['All Trainers',...new Set(records.map(r=>r.trainer).filter(Boolean))],months=[...new Set(records.map(r=>cleanMonth(r.month)))].sort((a,b)=>new Date(a)-new Date(b));trainer.innerHTML=trainers.map(x=>`<option>${escapeHtml(x)}</option>`).join('');month.innerHTML=months.map(x=>`<option>${escapeHtml(x)}</option>`).join('');if(months.includes('September 2026'))month.value='September 2026';update()}
+function update(){if(!records.length)return;const t=trainer.value,m=month.value,events=expanded().filter(r=>cleanMonth(r.month)===m&&(t==='All Trainers'||r.trainer===t)),base=records.filter(r=>cleanMonth(r.month)===m&&(t==='All Trainers'||r.trainer===t));const sess=events.length,hrs=events.reduce((a,e)=>a+hoursFromTime(e.time),0),part=base.reduce((a,r)=>a+(parseInt(String(r.participants||'').replace(/[^0-9]/g,''),10)||0),0);sessions.textContent=sess;hours.textContent=(Math.round(hrs*10)/10)+' hrs';participants.textContent=part||'—';fourthLabel.textContent=t==='All Trainers'?'ACTIVE TRAINERS':'TRAINER';fourthValue.textContent=t==='All Trainers'?new Set(base.map(r=>r.trainer).filter(Boolean)).size:t;subtitle.textContent=m+' · '+t;calTitle.textContent=m;calSub.textContent=t;renderCalendar(events,m);renderUnscheduled(base)}
+function renderCalendar(events,m){const d=new Date(m+' 1'),y=d.getFullYear(),mo=d.getMonth(),first=(d.getDay()+6)%7,last=new Date(y,mo+1,0).getDate(),cells=Math.ceil((first+last)/7)*7;days.innerHTML='';const byDay={};events.forEach(e=>(byDay[e.day]??=[]).push(e));for(let i=0;i<cells;i++){const day=i-first+1,c=document.createElement('div');c.className='cell';if(day<1||day>last){c.classList.add('muted');days.appendChild(c);continue}c.innerHTML=`<div class="date">${day}</div>`;(byDay[day]||[]).forEach((e,j)=>{const cols=['#3e7ca1','#43a99b','#efaa55','#9b78c5'],backs=['#eaf3ff','#e9f8f3','#fff2e3','#f4ebfa'],div=document.createElement('div');div.className='event';div.style.borderLeftColor=cols[j%4];div.style.background=backs[j%4];div.innerHTML=`<strong>${escapeHtml(e.trainingName||'Training')}</strong>${escapeHtml(e.time||'Time not set')}<br><small>${escapeHtml(e.trainer||'')} · ${escapeHtml(e.mode||'')}</small>`;c.appendChild(div)});days.appendChild(c)}}
+function renderUnscheduled(base){const pending=base.filter(r=>!parseDays(r.date,r.month).length);unscheduled.innerHTML=pending.length?'<div class="notice"><strong>Needs scheduling:</strong> '+pending.map(r=>escapeHtml(r.trainingName)+' ('+escapeHtml(r.date)+')').join(' · ')+'</div>':''}
 function escapeHtml(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-async function fetchSheet(tab){
-  const url='https://docs.google.com/spreadsheets/d/'+SPREADSHEET_ID+'/gviz/tq?tqx=out:csv&sheet='+encodeURIComponent(tab);
-  const res=await fetch(url,{cache:'no-store'});if(!res.ok)throw new Error('Could not load '+tab);
-  const text=await res.text();if(/^\s*</.test(text))throw new Error('Invalid Google Sheet response for '+tab);
-  return parseCSV(text).map(r=>({...r,trainer:(r.trainer||tab).trim(),month:cleanMonth(r.month)})).filter(r=>r.trainingName||r.date||r.time);
-}
-function dedupe(rows){
-  const seen=new Set();return rows.filter(r=>{const key=[r.trainer,r.trainingName,r.topics,r.date,r.time,r.month].join('|').toLowerCase();if(seen.has(key))return false;seen.add(key);return true});
-}
-async function loadData(){
-  try{
-    const results=await Promise.allSettled(SHEET_TABS.map(fetchSheet));
-    records=dedupe(results.flatMap(r=>r.status==='fulfilled'?r.value:[]));
-    if(!records.length){const res=await fetch(FALLBACK_CSV,{cache:'no-store'});records=parseCSV(await res.text());}
-    init();
-  }catch(e){document.getElementById('subtitle').textContent='Could not load calendar data. Check the Google Sheet connection.';console.error(e)}
-}
-trainer.addEventListener('change',update);month.addEventListener('change',update);
-document.getElementById('download').addEventListener('click',async()=>{
-  const t=trainer.value==='All Trainers'?'All-Trainers':trainer.value.replace(/[^a-z0-9]+/gi,'-'),m=month.value.replace(/\s+/g,'-');
-  const old=document.title;document.title=`Trainer Calendar - ${t} - ${m}`;
-  try{await html2pdf().set({margin:7,filename:`Trainer-Calendar-${t}-${m}.pdf`,image:{type:'jpeg',quality:.95},html2canvas:{scale:2,useCORS:true},jsPDF:{unit:'mm',format:'a4',orientation:'landscape'}}).from(document.getElementById('pdfArea')).save()}finally{document.title=old}
-});
-loadData();
+async function fetchSheet(tab){const url='https://docs.google.com/spreadsheets/d/'+SPREADSHEET_ID+'/gviz/tq?tqx=out:csv&sheet='+encodeURIComponent(tab);const res=await fetch(url,{cache:'no-store'});if(!res.ok)throw new Error('Could not load '+tab);const text=await res.text();if(/^\s*</.test(text)||/error/i.test(text.slice(0,300)))throw new Error('Invalid Google Sheet response for '+tab);const fallbackMonth=inferMonthFromTab(tab);return parseCSV(text).map(r=>({...r,trainer:(r.trainer||tab).trim(),month:cleanMonth(r.month,fallbackMonth)})).filter(r=>r.trainingName||r.date||r.time)}
+function dedupe(rows){const seen=new Set();return rows.filter(r=>{const key=[r.trainer,r.trainingName,r.topics,r.date,r.time,r.month].join('|').toLowerCase();if(seen.has(key))return false;seen.add(key);return true})}
+async function loadData(){try{const results=await Promise.allSettled(SHEET_TABS.map(fetchSheet));records=dedupe(results.flatMap(r=>r.status==='fulfilled'?r.value:[]));if(!records.length){const res=await fetch(FALLBACK_CSV,{cache:'no-store'});records=parseCSV(await res.text())}init()}catch(e){document.getElementById('subtitle').textContent='Could not load calendar data. Check the Google Sheet connection.';console.error(e)}}
+trainer.addEventListener('change',update);month.addEventListener('change',update);document.getElementById('download').addEventListener('click',async()=>{const t=trainer.value==='All Trainers'?'All-Trainers':trainer.value.replace(/[^a-z0-9]+/gi,'-'),m=month.value.replace(/\s+/g,'-');const old=document.title;document.title=`Trainer Calendar - ${t} - ${m}`;try{await html2pdf().set({margin:7,filename:`Trainer-Calendar-${t}-${m}.pdf`,image:{type:'jpeg',quality:.95},html2canvas:{scale:2,useCORS:true},jsPDF:{unit:'mm',format:'a4',orientation:'landscape'}}).from(document.getElementById('pdfArea')).save()}finally{document.title=old}});loadData();
 </script>
 </body>
 </html>
