@@ -32,172 +32,23 @@ select,.button{min-height:44px;border:0;border-radius:10px;padding:0 14px;font-s
 <script>
 const SPREADSHEET_ID="1RlvIAdPGIBWMpAyL3jP6LlUho2Hu7TaU6SwjsrltYQk";
 const SHEET_TABS=["Sheet1","Saif Sir","Vipin Sir","Jyoti Mam","Arsh Sir","Rithtika"];
-const FALLBACK_CSV="data.csv";
-let records=[];
-
-function parseCSV(text){
-  const lines=[];let row=[],cell="",quote=false;
-  for(let i=0;i<text.length;i++){
-    const c=text[i],n=text[i+1];
-    if(c==='"'&&quote&&n==='"'){cell+='"';i++;continue}
-    if(c==='"'){quote=!quote;continue}
-    if(c===','&&!quote){row.push(cell);cell="";continue}
-    if((c==='\n'||c==='\r')&&!quote){if(c==='\r'&&n==='\n')i++;row.push(cell);cell="";if(row.some(x=>x.trim()))lines.push(row);row=[];continue}
-    cell+=c;
-  }
-  if(cell||row.length){row.push(cell);lines.push(row)}
-  if(!lines.length)return [];
-  const headers=lines.shift().map(normalizeHeader);
-  return lines.map(r=>Object.fromEntries(headers.map((h,i)=>[h,(r[i]??'').trim()]))).filter(r=>Object.values(r).some(Boolean));
-}
-
-function normalizeHeader(v){
-  const s=String(v||'').trim().toLowerCase().replace(/[^a-z0-9]+/g,'');
-  const aliases={
-    trainer:'trainer',trainername:'trainer',trainerfullname:'trainer',
-    trainingname:'trainingName',training:'trainingName',coursename:'trainingName',sessionname:'trainingName',
-    topics:'topics',topic:'topics',
-    date:'date',dates:'date',trainingdate:'date',trainingdates:'date',
-    time:'time',timing:'time',
-    day:'day',days:'day',
-    mode:'mode',deliverymode:'mode',
-    department:'department',dept:'department',
-    participants:'participants',participant:'participants',headcount:'participants',
-    month:'month',monthyear:'month'
-  };
-  return aliases[s]||s;
-}
-
-function cleanMonth(v){
-  const s=String(v||'').trim();
-  const full=s.match(/(January|February|March|April|May|June|July|August|September|October|November|December)\s*[-/]?\s*(\d{4})/i);
-  if(full)return full[1].replace(/^./,x=>x.toUpperCase())+' '+full[2];
-  const name=s.match(/(January|February|March|April|May|June|July|August|September|October|November|December)/i);
-  if(name)return name[1].replace(/^./,x=>x.toUpperCase())+' 2026';
-  return 'September 2026';
-}
-
-function hoursFromTime(t){
-  const s=String(t||'').toLowerCase().replace(/\s+/g,' '),m=s.match(/(\d{1,2})(?::(\d{2}))?\s*(am|pm)?\s*(?:to|-)\s*(\d{1,2})(?::(\d{2}))?\s*(am|pm)?/);
-  if(!m)return 0;
-  let a=+m[1]+(+m[2]||0)/60,b=+m[4]+(+m[5]||0)/60,ap=m[3],bp=m[6]||ap;
-  if(ap==='pm'&&a<12)a+=12;if(ap==='am'&&a===12)a=0;if(bp==='pm'&&b<12)b+=12;if(bp==='am'&&b===12)b=0;
-  return b>a?b-a:0;
-}
-
-function parseDays(value,month){
-  const s=String(value||'').trim();
-  if(!s)return [];
-  if(/\d{1,2}[\/-]\d{1,2}[\/-]\d{2,4}/.test(s)||/\d{1,2}\s+(January|February|March|April|May|June|July|August|September|October|November|December)/i.test(s)){
-    const d=new Date(s);return Number.isNaN(d.getTime())?[]:[d.getDate()];
-  }
-  if(/[a-z]/i.test(s))return [];
-  const days=s.match(/\b\d{1,2}\b/g)||[];
-  const last=new Date(new Date(month+' 1').getFullYear(),new Date(month+' 1').getMonth()+1,0).getDate();
-  return [...new Set(days.map(Number).filter(n=>n>=1&&n<=last))];
-}
-
-function expanded(){
-  const out=[];
-  for(const r of records){
-    const month=cleanMonth(r.month),d=new Date(month+' 1'),daysList=parseDays(r.date,month);
-    if(Number.isNaN(d.getTime()))continue;
-    for(const day of daysList)out.push({...r,y:d.getFullYear(),m:d.getMonth(),day});
-  }
-  return out;
-}
-
-function canonicalize(rows,tabName){
-  return rows.map(r=>({...r,trainer:(r.trainer||tabName||'').trim(),month:cleanMonth(r.month)})).filter(r=>r.trainingName||r.date||r.time);
-}
-
-function dedupe(rows){
-  const seen=new Set();return rows.filter(r=>{const key=[r.trainer,r.trainingName,r.topics,r.date,r.time,r.month].join('|').toLowerCase();if(seen.has(key))return false;seen.add(key);return true});
-}
-
-async function fetchSheet(tab){
-  const url='https://docs.google.com/spreadsheets/d/'+SPREADSHEET_ID+'/gviz/tq?tqx=out:csv&sheet='+encodeURIComponent(tab);
-  const res=await fetch(url,{cache:'no-store'});
-  if(!res.ok)throw new Error('Could not load '+tab);
-  const text=await res.text();
-  if(/^\s*</.test(text)||/error/i.test(text.slice(0,300)))throw new Error('Invalid Google Sheet response for '+tab);
-  return canonicalize(parseCSV(text),tab);
-}
-
-function init(){
-  if(!records.length){
-    document.getElementById('subtitle').textContent='No calendar rows found in the Google Sheet.';
-    return;
-  }
-  const trainers=['All Trainers',...new Set(records.map(r=>r.trainer).filter(Boolean))];
-  const months=[...new Set(records.map(r=>cleanMonth(r.month)))].sort((a,b)=>new Date(a)-new Date(b));
-  trainer.innerHTML=trainers.map(x=>`<option>${escapeHtml(x)}</option>`).join('');
-  month.innerHTML=months.map(x=>`<option>${escapeHtml(x)}</option>`).join('');
-  if(months.includes('September 2026'))month.value='September 2026';
-  update();
-}
-
-function update(){
-  if(!records.length)return;
-  const t=trainer.value,m=month.value;
-  const base=records.filter(r=>cleanMonth(r.month)===m&&(t==='All Trainers'||r.trainer===t));
-  const events=expanded().filter(r=>cleanMonth(r.month)===m&&(t==='All Trainers'||r.trainer===t));
-  sessions.textContent=events.length;
-  hours.textContent=(Math.round(base.reduce((a,r)=>a+hoursFromTime(r.time),0)*10)/10)+' hrs';
-  const part=base.reduce((a,r)=>a+(parseInt(String(r.participants||'').replace(/[^0-9]/g,''),10)||0),0);
-  participants.textContent=part||'—';
-  fourthLabel.textContent=t==='All Trainers'?'ACTIVE TRAINERS':'TRAINER';
-  fourthValue.textContent=t==='All Trainers'?new Set(base.map(r=>r.trainer).filter(Boolean)).size:t;
-  subtitle.textContent=m+' · '+t;
-  calTitle.textContent=m;calSub.textContent=t;
-  renderCalendar(events,m);renderUnscheduled(base);
-}
-
-function renderCalendar(events,m){
-  const d=new Date(m+' 1'),y=d.getFullYear(),mo=d.getMonth(),first=(d.getDay()+6)%7,last=new Date(y,mo+1,0).getDate(),cells=Math.ceil((first+last)/7)*7;
-  days.innerHTML='';const byDay={};events.forEach(e=>(byDay[e.day]??=[]).push(e));
-  for(let i=0;i<cells;i++){
-    const day=i-first+1,c=document.createElement('div');c.className='cell';
-    if(day<1||day>last){c.classList.add('muted');days.appendChild(c);continue}
-    c.innerHTML=`<div class="date">${day}</div>`;
-    (byDay[day]||[]).forEach((e,j)=>{
-      const cols=['#3e7ca1','#43a99b','#efaa55','#9b78c5'],backs=['#eaf3ff','#e9f8f3','#fff2e3','#f4ebfa'],div=document.createElement('div');
-      div.className='event';div.style.borderLeftColor=cols[j%4];div.style.background=backs[j%4];
-      div.innerHTML=`<strong>${escapeHtml(e.trainingName||'Training')}</strong>${escapeHtml(e.time||'Time not set')}<br><small>${escapeHtml(e.trainer||'')} · ${escapeHtml(e.mode||'')}</small>`;
-      c.appendChild(div);
-    });
-    days.appendChild(c);
-  }
-}
-
-function renderUnscheduled(base){
-  const pending=base.filter(r=>!parseDays(r.date,r.month).length);
-  unscheduled.innerHTML=pending.length?'<div class="notice"><strong>Needs scheduling:</strong> '+pending.map(r=>escapeHtml(r.trainingName)+' ('+escapeHtml(r.date)+')').join(' · ')+'</div>':'';
-}
-
+const FALLBACK_CSV="data.csv";let records=[];
+function parseCSV(text){const lines=[];let row=[],cell="",quote=false;for(let i=0;i<text.length;i++){const c=text[i],n=text[i+1];if(c==='"'&&quote&&n==='"'){cell+='"';i++;continue}if(c==='"'){quote=!quote;continue}if(c===','&&!quote){row.push(cell);cell="";continue}if((c==='\n'||c==='\r')&&!quote){if(c==='\r'&&n==='\n')i++;row.push(cell);cell="";if(row.some(x=>x.trim()))lines.push(row);row=[];continue}cell+=c}if(cell||row.length){row.push(cell);lines.push(row)}if(!lines.length)return [];const headers=lines.shift().map(normalizeHeader);return lines.map(r=>Object.fromEntries(headers.map((h,i)=>[h,(r[i]??'').trim()]))).filter(r=>Object.values(r).some(Boolean))}
+function normalizeHeader(v){const s=String(v||'').trim().toLowerCase().replace(/[^a-z0-9]+/g,'');const aliases={trainer:'trainer',trainername:'trainer',trainerfullname:'trainer',trainingname:'trainingName',training:'trainingName',coursename:'trainingName',sessionname:'trainingName',topics:'topics',topic:'topics',date:'date',dates:'date',trainingdate:'date',trainingdates:'date',time:'time',timing:'time',day:'day',days:'day',mode:'mode',deliverymode:'mode',department:'department',dept:'department',participants:'participants',participant:'participants',headcount:'participants',month:'month',monthyear:'month'};return aliases[s]||s}
+function cleanMonth(v){const s=String(v||'').trim();const full=s.match(/(January|February|March|April|May|June|July|August|September|October|November|December)\s*[-\/]?\s*(\d{4})/i);if(full)return full[1].replace(/^./,x=>x.toUpperCase())+' '+full[2];const name=s.match(/(January|February|March|April|May|June|July|August|September|October|November|December)/i);if(name)return name[1].replace(/^./,x=>x.toUpperCase())+' 2026';return 'September 2026'}
+function hoursFromTime(t){const s=String(t||'').toLowerCase().replace(/\s+/g,' '),m=s.match(/(\d{1,2})(?::(\d{2}))?\s*(am|pm)?\s*(?:to|-)\s*(\d{1,2})(?::(\d{2}))?\s*(am|pm)?/);if(!m)return 0;let a=+m[1]+(+m[2]||0)/60,b=+m[4]+(+m[5]||0)/60,ap=m[3],bp=m[6]||ap;if(ap==='pm'&&a<12)a+=12;if(ap==='am'&&a===12)a=0;if(bp==='pm'&&b<12)b+=12;if(bp==='am'&&b===12)b=0;return b>a?b-a:0}
+function parseDays(value,month){const s=String(value||'').trim();if(!s)return [];if(/\d{1,2}[\/-]\d{1,2}[\/-]\d{2,4}/.test(s)||/\d{1,2}\s+(January|February|March|April|May|June|July|August|September|October|November|December)/i.test(s)){const d=new Date(s);return Number.isNaN(d.getTime())?[]:[d.getDate()]}if(/[a-z]/i.test(s))return [];const days=s.match(/\b\d{1,2}\b/g)||[];const base=new Date(month+' 1');if(Number.isNaN(base.getTime()))return [];const last=new Date(base.getFullYear(),base.getMonth()+1,0).getDate();return [...new Set(days.map(Number).filter(n=>n>=1&&n<=last))]}
+function expanded(){const out=[];for(const r of records){const month=cleanMonth(r.month),d=new Date(month+' 1'),daysList=parseDays(r.date,month);if(Number.isNaN(d.getTime()))continue;for(const day of daysList)out.push({...r,y:d.getFullYear(),m:d.getMonth(),day})}return out}
+function canonicalize(rows,tabName){return rows.map(r=>({...r,trainer:(r.trainer||tabName||'').trim(),month:cleanMonth(r.month)})).filter(r=>r.trainingName||r.date||r.time)}
+function dedupe(rows){const seen=new Set();return rows.filter(r=>{const key=[r.trainer,r.trainingName,r.topics,r.date,r.time,r.month].join('|').toLowerCase();if(seen.has(key))return false;seen.add(key);return true})}
+async function fetchSheet(tab){const url='https://docs.google.com/spreadsheets/d/'+SPREADSHEET_ID+'/gviz/tq?tqx=out:csv&sheet='+encodeURIComponent(tab);const res=await fetch(url,{cache:'no-store'});if(!res.ok)throw new Error('Could not load '+tab);const text=await res.text();if(/^\s*</.test(text)||/error/i.test(text.slice(0,300)))throw new Error('Invalid Google Sheet response for '+tab);return canonicalize(parseCSV(text),tab)}
+function init(){if(!records.length){document.getElementById('subtitle').textContent='No calendar rows found in the Google Sheet.';return}const trainers=['All Trainers',...new Set(records.map(r=>r.trainer).filter(Boolean))],months=[...new Set(records.map(r=>cleanMonth(r.month)))].sort((a,b)=>new Date(a)-new Date(b));trainer.innerHTML=trainers.map(x=>`<option>${escapeHtml(x)}</option>`).join('');month.innerHTML=months.map(x=>`<option>${escapeHtml(x)}</option>`).join('');if(months.includes('September 2026'))month.value='September 2026';update()}
+function update(){if(!records.length)return;const t=trainer.value,m=month.value,base=records.filter(r=>cleanMonth(r.month)===m&&(t==='All Trainers'||r.trainer===t)),events=expanded().filter(r=>cleanMonth(r.month)===m&&(t==='All Trainers'||r.trainer===t));sessions.textContent=events.length;const hrs=base.reduce((a,r)=>a+hoursFromTime(r.time)*parseDays(r.date,r.month).length,0);hours.textContent=(Math.round(hrs*10)/10)+' hrs';const part=base.reduce((a,r)=>a+(parseInt(String(r.participants||'').replace(/[^0-9]/g,''),10)||0),0);participants.textContent=part||'—';fourthLabel.textContent=t==='All Trainers'?'ACTIVE TRAINERS':'TRAINER';fourthValue.textContent=t==='All Trainers'?new Set(base.map(r=>r.trainer).filter(Boolean)).size:t;subtitle.textContent=m+' · '+t;calTitle.textContent=m;calSub.textContent=t;renderCalendar(events,m);renderUnscheduled(base)}
+function renderCalendar(events,m){const d=new Date(m+' 1'),y=d.getFullYear(),mo=d.getMonth(),first=(d.getDay()+6)%7,last=new Date(y,mo+1,0).getDate(),cells=Math.ceil((first+last)/7)*7;days.innerHTML='';const byDay={};events.forEach(e=>(byDay[e.day]??=[]).push(e));for(let i=0;i<cells;i++){const day=i-first+1,c=document.createElement('div');c.className='cell';if(day<1||day>last){c.classList.add('muted');days.appendChild(c);continue}c.innerHTML=`<div class="date">${day}</div>`;(byDay[day]||[]).forEach((e,j)=>{const cols=['#3e7ca1','#43a99b','#efaa55','#9b78c5'],backs=['#eaf3ff','#e9f8f3','#fff2e3','#f4ebfa'],div=document.createElement('div');div.className='event';div.style.borderLeftColor=cols[j%4];div.style.background=backs[j%4];div.innerHTML=`<strong>${escapeHtml(e.trainingName||'Training')}</strong>${escapeHtml(e.time||'Time not set')}<br><small>${escapeHtml(e.trainer||'')} · ${escapeHtml(e.mode||'')}</small>`;c.appendChild(div)});days.appendChild(c)}}
+function renderUnscheduled(base){const pending=base.filter(r=>!parseDays(r.date,r.month).length);unscheduled.innerHTML=pending.length?'<div class="notice"><strong>Needs scheduling:</strong> '+pending.map(r=>escapeHtml(r.trainingName)+' ('+escapeHtml(r.date)+')').join(' · ')+'</div>':''}
 function escapeHtml(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-
-async function loadData(){
-  try{
-    const results=await Promise.allSettled(SHEET_TABS.map(fetchSheet));
-    const loaded=results.flatMap((r,i)=>r.status==='fulfilled'?r.value:[]);
-    records=dedupe(loaded);
-    if(!records.length){
-      const res=await fetch(FALLBACK_CSV,{cache:'no-store'});records=parseCSV(await res.text());
-    }
-    init();
-  }catch(e){
-    document.getElementById('subtitle').textContent='Could not load calendar data. Please check the Google Sheet sharing settings.';
-    console.error(e);
-  }
-}
-
-trainer.addEventListener('change',update);month.addEventListener('change',update);
-document.getElementById('download').addEventListener('click',async()=>{
-  const t=trainer.value==='All Trainers'?'All-Trainers':trainer.value.replace(/[^a-z0-9]+/gi,'-'),m=month.value.replace(/\s+/g,'-');
-  await html2pdf().set({margin:7,filename:`Trainer-Calendar-${t}-${m}.pdf`,image:{type:'jpeg',quality:.95},html2canvas:{scale:2,useCORS:true},jsPDF:{unit:'mm',format:'a4',orientation:'landscape'}}).from(document.getElementById('pdfArea')).save();
-});
-loadData();
+async function loadData(){try{const results=await Promise.allSettled(SHEET_TABS.map(fetchSheet));const loaded=results.flatMap((r)=>r.status==='fulfilled'?r.value:[]);records=dedupe(loaded);if(!records.length){const res=await fetch(FALLBACK_CSV,{cache:'no-store'});records=parseCSV(await res.text())}init()}catch(e){document.getElementById('subtitle').textContent='Could not load calendar data. Please check the Google Sheet sharing settings.';console.error(e)}}
+trainer.addEventListener('change',update);month.addEventListener('change',update);document.getElementById('download').addEventListener('click',async()=>{const t=trainer.value==='All Trainers'?'All-Trainers':trainer.value.replace(/[^a-z0-9]+/gi,'-'),m=month.value.replace(/\s+/g,'-');await html2pdf().set({margin:7,filename:`Trainer-Calendar-${t}-${m}.pdf`,image:{type:'jpeg',quality:.95},html2canvas:{scale:2,useCORS:true},jsPDF:{unit:'mm',format:'a4',orientation:'landscape'}}).from(document.getElementById('pdfArea')).save()});loadData();
 </script>
 </body>
 </html>
