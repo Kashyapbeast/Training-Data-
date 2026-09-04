@@ -1061,6 +1061,34 @@ select{
 
 }
 
+
+/* FINAL MOBILE CALENDAR OVERRIDE */
+@media (max-width:760px){
+  .app{padding:6px!important;max-width:none!important}
+  .hero{padding:16px 12px 14px!important;border-radius:16px!important}
+  .hero h1{font-size:22px!important;line-height:1.15!important}
+  .toolbar{display:grid!important;grid-template-columns:1fr!important;gap:8px!important}
+  select,.button{width:100%!important;min-width:0!important;min-height:42px!important}
+  .kpis{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:6px!important;margin:10px 0!important}
+  .kpi{padding:10px!important;border-radius:12px!important}
+  .klabel{font-size:7.5px!important}
+  .kvalue{font-size:18px!important}
+  .calendar-card{width:100%!important;border-radius:13px!important;overflow:hidden!important}
+  .cal-top{padding:12px!important}
+  .week,.days{display:grid!important;grid-template-columns:repeat(7,minmax(0,1fr))!important;width:100%!important;min-width:0!important}
+  .week div{min-width:0!important;padding:8px 0!important;font-size:7px!important;white-space:nowrap!important;overflow:hidden!important}
+  .cell{min-width:0!important;width:100%!important;height:82px!important;min-height:82px!important;padding:4px 2px!important;overflow:hidden!important}
+  .date{font-size:9px!important;margin:0 0 4px!important}
+  .event{min-width:0!important;width:100%!important;padding:4px 3px!important;margin-top:2px!important;border-radius:5px!important;font-size:6.5px!important;line-height:1.1!important;overflow:hidden!important}
+  .event strong{display:block!important;font-size:6.8px!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+  .event small{display:none!important}
+}
+@media (max-width:390px){
+  .cell{height:78px!important;min-height:78px!important}
+  .week div{font-size:6.5px!important}
+  .event{font-size:6px!important;padding:3px 2px!important}
+  .event strong{font-size:6.3px!important}
+}
 </style>
 
 </head>
