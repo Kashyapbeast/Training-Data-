@@ -1129,6 +1129,149 @@ select{
 }
 
 /* =========================================================
+   DAY DETAILS POPUP
+========================================================= */
+
+.more-events{
+  appearance:none;
+  border:0;
+  background:transparent;
+  cursor:pointer;
+  width:100%;
+  padding:4px 2px;
+  color:#3e7ca1;
+  text-decoration:underline;
+  font:inherit;
+  font-weight:800;
+  touch-action:manipulation;
+}
+
+.more-events:hover{
+  color:#18324a;
+}
+
+.day-modal{
+  position:fixed;
+  inset:0;
+  z-index:9999;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:18px;
+  background:rgba(15,28,40,.48);
+}
+
+.day-modal.open{
+  display:flex;
+}
+
+.day-modal-card{
+  width:min(520px,100%);
+  max-height:85vh;
+  overflow:auto;
+  background:#fff;
+  border-radius:18px;
+  box-shadow:0 20px 60px rgba(0,0,0,.22);
+}
+
+.day-modal-head{
+  position:sticky;
+  top:0;
+  z-index:1;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:16px 18px;
+  background:#fff;
+  border-bottom:1px solid var(--line);
+}
+
+.day-modal-title{
+  font-size:18px;
+  font-weight:800;
+  color:var(--ink);
+}
+
+.day-modal-close{
+  width:40px;
+  height:40px;
+  border:0;
+  border-radius:50%;
+  background:#f1f4f6;
+  color:var(--ink);
+  font-size:22px;
+  line-height:1;
+  cursor:pointer;
+}
+
+.day-modal-list{
+  padding:12px 14px 16px;
+}
+
+.day-modal-event{
+  padding:12px;
+  margin-bottom:9px;
+  border-radius:10px;
+  border-left:4px solid var(--blue);
+  background:#eaf3ff;
+}
+
+.day-modal-event strong{
+  display:block;
+  font-size:13px;
+  line-height:1.25;
+  margin-bottom:5px;
+}
+
+.day-modal-event .modal-time{
+  display:block;
+  font-size:11px;
+  color:#60727f;
+  margin-bottom:3px;
+}
+
+.day-modal-event small{
+  color:#60727f;
+  font-size:10px;
+}
+
+.calendar-week .event{
+  cursor:pointer;
+  touch-action:manipulation;
+}
+
+@media(max-width:760px){
+  .day-modal{
+    align-items:flex-end;
+    padding:0;
+  }
+
+  .day-modal-card{
+    width:100%;
+    max-height:82vh;
+    border-radius:18px 18px 0 0;
+  }
+
+  .day-modal-title{
+    font-size:16px;
+  }
+
+  .day-modal-event{
+    padding:12px;
+  }
+
+  .day-modal-event strong{
+    font-size:13px;
+  }
+
+  .more-events{
+    min-height:28px;
+    font-size:8px !important;
+  }
+}
+
+/* =========================================================
    PRINT
 ========================================================= */
 
@@ -1423,6 +1566,20 @@ select{
 
 </div>
 
+
+
+<!-- =======================================================
+     DAY DETAILS MODAL
+======================================================== -->
+<div class="day-modal" id="dayModal" aria-hidden="true">
+  <div class="day-modal-card" role="dialog" aria-modal="true" aria-labelledby="dayModalTitle">
+    <div class="day-modal-head">
+      <div class="day-modal-title" id="dayModalTitle">Training Sessions</div>
+      <button type="button" class="day-modal-close" id="dayModalClose" aria-label="Close">×</button>
+    </div>
+    <div class="day-modal-list" id="dayModalList"></div>
+  </div>
+</div>
 
 </main>
 
@@ -2435,13 +2592,25 @@ function renderCalendar(events, month){
           <strong>${esc(event.trainingName || 'Training')}</strong>
           <span class="event-time">${esc(event.time || 'Time not set')}</span>
         `;
+
+        eventDiv.addEventListener('click', function(clickEvent){
+          clickEvent.stopPropagation();
+          openDayModal(day, dayEvents, month, event);
+        });
+
         cell.appendChild(eventDiv);
       });
 
       if(dayEvents.length > 3){
-        const more = document.createElement('div');
+        const more = document.createElement('button');
+        more.type = 'button';
         more.className = 'more-events';
         more.textContent = `+${dayEvents.length - 3} more`;
+        more.setAttribute('aria-label', `Show all ${dayEvents.length} training sessions for ${month} ${day}`);
+        more.addEventListener('click', function(event){
+          event.stopPropagation();
+          openDayModal(day, dayEvents, month);
+        });
         cell.appendChild(more);
       }
 
@@ -2530,6 +2699,78 @@ function renderUnscheduled(
 
 }
 
+
+/* =========================================================
+   DAY DETAILS MODAL
+========================================================= */
+
+function openDayModal(day, dayEvents, month, selectedEvent){
+
+  const modal = $('dayModal');
+  const list = $('dayModalList');
+  const title = $('dayModalTitle');
+
+  if(!modal || !list || !title) return;
+
+  title.textContent = `${month} · ${day} · ${dayEvents.length} session${dayEvents.length === 1 ? '' : 's'}`;
+
+  const colors = ['#3e7ca1','#43a99b','#efaa55','#9b78c5'];
+  const backgrounds = ['#eaf3ff','#e9f8f3','#fff2e3','#f4ebfa'];
+
+  list.innerHTML = dayEvents.map((event,index) => `
+    <div class="day-modal-event"
+         style="border-left-color:${colors[index % colors.length]};background:${backgrounds[index % backgrounds.length]}">
+      <strong>${esc(event.trainingName || 'Training')}</strong>
+      <span class="modal-time">${esc(event.time || 'Time not set')}</span>
+      ${
+        event.trainer || event.mode
+          ? `<small>${esc(event.trainer || '')}${event.mode ? ' · ' + esc(event.mode) : ''}</small>`
+          : ''
+      }
+    </div>
+  `).join('');
+
+  modal.classList.add('open');
+  modal.setAttribute('aria-hidden','false');
+
+  const selectedIndex = selectedEvent
+    ? dayEvents.indexOf(selectedEvent)
+    : -1;
+
+  if(selectedIndex >= 0){
+    const items = list.querySelectorAll('.day-modal-event');
+    if(items[selectedIndex]){
+      items[selectedIndex].scrollIntoView({
+        block:'nearest',
+        behavior:'smooth'
+      });
+    }
+  }
+}
+
+function closeDayModal(){
+
+  const modal = $('dayModal');
+
+  if(!modal) return;
+
+  modal.classList.remove('open');
+  modal.setAttribute('aria-hidden','true');
+}
+
+$('dayModalClose').addEventListener('click', closeDayModal);
+
+$('dayModal').addEventListener('click', function(event){
+  if(event.target === $('dayModal')){
+    closeDayModal();
+  }
+});
+
+document.addEventListener('keydown', function(event){
+  if(event.key === 'Escape'){
+    closeDayModal();
+  }
+});
 
 /* =========================================================
    LOAD DATA
