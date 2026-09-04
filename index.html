@@ -1,24 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+>
+
 <title>Trainer Calendar | L&D Dashboard</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
+
 <style>
+
+/* =========================================================
+   ROOT
+========================================================= */
+
 :root{
+
   --navy:#18324a;
   --blue:#3e7ca1;
   --teal:#43a99b;
   --orange:#efaa55;
   --purple:#9b78c5;
+
   --ink:#1d2b38;
   --muted:#74818c;
+
   --line:#e4e9ee;
   --bg:#f5f7fa;
+
 }
+
+
+/* =========================================================
+   GLOBAL
+========================================================= */
 
 *{
   box-sizing:border-box;
@@ -26,689 +48,1285 @@
 
 html,
 body{
+  margin:0;
+  padding:0;
   width:100%;
+  min-height:100%;
   overflow-x:hidden;
 }
 
 body{
-  margin:0;
+
   background:var(--bg);
-  font-family:Inter,Segoe UI,Arial,sans-serif;
+
+  font-family:
+    Inter,
+    "Segoe UI",
+    Arial,
+    sans-serif;
+
   color:var(--ink);
+
 }
+
+
+/* =========================================================
+   MAIN APP
+========================================================= */
 
 .app{
+
+  width:100%;
   max-width:1320px;
-  margin:auto;
+
+  margin:0 auto;
+
   padding:26px;
+
 }
 
-/* =========================
+
+/* =========================================================
    HERO
-========================= */
+========================================================= */
 
 .hero{
-  background:linear-gradient(
-    135deg,
-    #18324a,
-    #32647f 58%,
-    #63a2a9
-  );
-  color:#fff;
+
+  background:
+    linear-gradient(
+      135deg,
+      #18324a 0%,
+      #32647f 58%,
+      #63a2a9 100%
+    );
+
+  color:white;
+
   border-radius:22px;
+
   padding:28px 30px;
-  box-shadow:0 12px 35px rgba(24,50,74,.16);
+
+  box-shadow:
+    0 12px 35px
+    rgba(24,50,74,.16);
+
 }
+
 
 .eyebrow{
+
   font-size:11px;
+
   font-weight:800;
+
   letter-spacing:1.6px;
+
   opacity:.75;
+
 }
+
 
 .hero h1{
+
   font-size:31px;
+
   margin:5px 0;
+
 }
+
 
 .hero p{
+
   margin:0;
-  opacity:.78;
+
+  font-size:13px;
+
+  opacity:.8;
+
 }
+
+
+/* =========================================================
+   TOOLBAR
+========================================================= */
 
 .toolbar{
+
   display:flex;
+
   gap:12px;
+
   flex-wrap:wrap;
-  margin-top:22px;
+
   align-items:flex-end;
+
+  margin-top:22px;
+
 }
 
+
 .toolbar label{
+
   display:flex;
+
   flex-direction:column;
+
   gap:6px;
+
   font-size:10px;
+
   font-weight:800;
+
   letter-spacing:.7px;
+
 }
+
 
 select,
 .button{
+
   min-height:46px;
+
   border:0;
+
   border-radius:11px;
-  padding:0 14px;
+
+  padding:0 15px;
+
   font-size:14px;
-  background:#fff;
+
+  background:white;
+
   color:var(--ink);
+
 }
+
 
 select{
+
   min-width:190px;
+
 }
+
 
 .button{
+
   cursor:pointer;
+
   font-weight:800;
+
 }
+
 
 .download{
+
   background:#ffd166;
+
 }
 
-/* =========================
+
+/* =========================================================
    KPI CARDS
-========================= */
+========================================================= */
 
 .kpis{
+
   display:grid;
-  grid-template-columns:repeat(4,1fr);
+
+  grid-template-columns:
+    repeat(4,1fr);
+
   gap:14px;
+
   margin:18px 0;
+
 }
+
 
 .kpi{
-  background:#fff;
+
+  background:white;
+
   border:1px solid var(--line);
+
   border-radius:16px;
+
   padding:17px;
-  box-shadow:0 4px 16px rgba(25,45,60,.045);
+
+  box-shadow:
+    0 4px 16px
+    rgba(25,45,60,.045);
+
   border-top:4px solid var(--blue);
+
   min-width:0;
+
 }
+
 
 .kpi:nth-child(2){
+
   border-top-color:var(--teal);
+
 }
+
 
 .kpi:nth-child(3){
+
   border-top-color:var(--orange);
+
 }
+
 
 .kpi:nth-child(4){
+
   border-top-color:var(--purple);
+
 }
+
 
 .klabel{
+
   font-size:11px;
+
   color:var(--muted);
+
   font-weight:800;
+
 }
+
 
 .kvalue{
+
   font-size:26px;
+
   font-weight:800;
+
   margin-top:6px;
+
   white-space:nowrap;
+
   overflow:hidden;
+
   text-overflow:ellipsis;
+
 }
 
-/* =========================
-   CALENDAR
-========================= */
+
+/* =========================================================
+   CALENDAR CARD
+========================================================= */
 
 .calendar-card{
-  background:#fff;
+
+  width:100%;
+
+  background:white;
+
   border:1px solid var(--line);
+
   border-radius:17px;
+
   overflow:hidden;
-  box-shadow:0 4px 16px rgba(25,45,60,.045);
+
+  box-shadow:
+    0 4px 16px
+    rgba(25,45,60,.045);
+
 }
+
+
+/* =========================================================
+   CALENDAR HEADER
+========================================================= */
 
 .cal-top{
+
   padding:18px 20px;
+
   border-bottom:1px solid var(--line);
+
 }
+
 
 .cal-title{
+
   font-size:20px;
+
   font-weight:800;
+
 }
 
+
 .cal-sub{
+
   font-size:12px;
+
   color:var(--muted);
+
   margin-top:3px;
+
 }
+
+
+/* =========================================================
+   WEEK HEADER
+========================================================= */
 
 .week,
 .days{
+
   display:grid;
-  grid-template-columns:repeat(7,minmax(0,1fr));
+
+  grid-template-columns:
+    repeat(7,minmax(0,1fr));
+
+  width:100%;
+
 }
+
 
 .week div{
-  padding:11px 8px;
+
+  padding:11px 5px;
+
   background:#f8fafc;
+
   border-right:1px solid #edf0f2;
+
   color:#71808b;
+
   font-size:10px;
+
   font-weight:800;
+
   text-align:center;
+
 }
+
+
+/* =========================================================
+   CALENDAR CELLS
+========================================================= */
 
 .cell{
+
   min-height:135px;
+
   padding:8px;
+
   border-right:1px solid #edf0f2;
+
   border-bottom:1px solid #edf0f2;
-  background:#fff;
+
+  background:white;
+
+  overflow:hidden;
+
 }
+
 
 .cell.muted{
+
   background:#fbfcfd;
+
 }
+
 
 .date{
+
   font-size:12px;
+
   font-weight:800;
+
   color:#657582;
+
+  margin-bottom:4px;
+
 }
+
+
+/* =========================================================
+   TRAINING EVENT
+========================================================= */
 
 .event{
+
   padding:8px;
+
   border-radius:9px;
+
   margin-top:7px;
+
   font-size:10px;
+
   line-height:1.35;
-  border-left:4px solid var(--blue);
+
+  border-left:
+    4px solid var(--blue);
+
   background:#eaf3ff;
+
+  overflow:hidden;
+
 }
+
 
 .event strong{
+
   display:block;
+
   font-size:10.5px;
-  margin-bottom:2px;
+
+  margin-bottom:3px;
+
 }
+
 
 .event small{
+
   color:#60727f;
+
 }
 
-/* =========================
+
+/* =========================================================
    UNSCHEDULED
-========================= */
+========================================================= */
 
 .unscheduled{
+
   margin-top:16px;
+
 }
+
 
 .notice{
-  padding:12px 14px;
+
+  padding:13px 15px;
+
   border:1px solid var(--line);
+
   border-radius:11px;
-  background:#fff;
+
+  background:white;
+
   font-size:12px;
+
   color:var(--muted);
+
   margin-bottom:8px;
+
 }
+
 
 .notice strong{
+
   color:var(--ink);
+
 }
 
-/* =========================
-   MOBILE AGENDA
-========================= */
 
-.mobile-agenda{
-  display:none;
-}
-
-.mobile-day{
-  border-bottom:1px solid var(--line);
-  padding:14px 15px;
-  background:#fff;
-}
-
-.mobile-day:last-child{
-  border-bottom:0;
-}
-
-.mobile-day-head{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:8px;
-}
-
-.mobile-day-date{
-  font-size:15px;
-  font-weight:800;
-}
-
-.mobile-day-name{
-  font-size:10px;
-  font-weight:800;
-  color:var(--muted);
-  letter-spacing:.7px;
-}
-
-.mobile-event{
-  padding:12px;
-  border-radius:12px;
-  margin-top:8px;
-  border-left:4px solid var(--blue);
-}
-
-.mobile-event strong{
-  display:block;
-  font-size:13px;
-  line-height:1.3;
-  margin-bottom:5px;
-}
-
-.mobile-event .meta{
-  font-size:11px;
-  color:#667783;
-  line-height:1.5;
-}
-
-.mobile-empty{
-  padding:20px 15px;
-  text-align:center;
-  color:var(--muted);
-  font-size:13px;
-}
-
-/* =========================
+/* =========================================================
    FOOTER
-========================= */
+========================================================= */
 
 .footer{
+
   font-size:11px;
+
   color:#84919a;
+
   text-align:center;
+
   margin:14px;
+
 }
 
-/* =========================
+
+/* =========================================================
    TABLET
-========================= */
+========================================================= */
 
 @media(max-width:900px){
 
   .app{
+
     padding:18px;
+
   }
+
 
   .kpis{
-    grid-template-columns:repeat(2,1fr);
+
+    grid-template-columns:
+      repeat(2,1fr);
+
   }
+
 }
 
-/* =========================
+
+/* =========================================================
    MOBILE
-========================= */
+========================================================= */
 
 @media(max-width:760px){
 
   html,
   body{
+
     width:100%;
+
     overflow-x:hidden;
+
   }
+
 
   .app{
+
     width:100%;
-    padding:10px;
+
+    padding:8px;
+
   }
 
-  /* HERO */
+
+  /* -------------------------
+     HERO
+  ------------------------- */
 
   .hero{
-    padding:20px 16px;
+
+    width:100%;
+
+    padding:18px 14px;
+
     border-radius:18px;
-    box-shadow:0 8px 24px rgba(24,50,74,.13);
+
   }
+
 
   .eyebrow{
+
     font-size:9px;
-    letter-spacing:1.3px;
+
+    letter-spacing:1.2px;
+
   }
+
 
   .hero h1{
-    font-size:25px;
-    margin:4px 0 2px;
+
+    font-size:24px;
+
+    margin:4px 0 3px;
+
   }
+
 
   .hero p{
-    font-size:11px;
+
+    font-size:10px;
+
     line-height:1.4;
+
   }
 
-  /* FILTERS */
+
+  /* -------------------------
+     FILTERS
+  ------------------------- */
 
   .toolbar{
+
     display:grid;
+
     grid-template-columns:1fr;
-    gap:10px;
-    margin-top:16px;
+
+    gap:9px;
+
+    margin-top:15px;
+
   }
 
+
   .toolbar label{
+
     font-size:9px;
+
     gap:5px;
+
   }
+
 
   select,
   .button{
+
     width:100%;
+
     min-width:0;
-    min-height:46px;
+
+    min-height:45px;
+
     font-size:15px;
+
+    border-radius:11px;
+
   }
 
-  /* KPI */
+
+  /* -------------------------
+     KPIs
+  ------------------------- */
 
   .kpis{
-    grid-template-columns:repeat(2,minmax(0,1fr));
-    gap:9px;
+
+    display:grid;
+
+    grid-template-columns:
+      repeat(2,minmax(0,1fr));
+
+    gap:8px;
+
     margin:12px 0;
+
   }
+
 
   .kpi{
-    padding:13px 12px;
+
+    padding:12px;
+
     border-radius:14px;
+
   }
+
 
   .klabel{
-    font-size:9px;
+
+    font-size:8.5px;
+
   }
+
 
   .kvalue{
-    font-size:22px;
+
+    font-size:21px;
+
     margin-top:4px;
+
   }
 
-  /* CALENDAR HEADER */
+
+  /* -------------------------
+     CALENDAR
+  ------------------------- */
 
   .calendar-card{
+
+    width:100%;
+
     border-radius:15px;
+
   }
+
 
   .cal-top{
-    padding:15px;
+
+    padding:14px;
+
   }
+
 
   .cal-title{
-    font-size:18px;
+
+    font-size:19px;
+
   }
+
 
   .cal-sub{
+
     font-size:11px;
+
   }
+
 
   /*
-    Hide desktop 7-column calendar on mobile.
-    Mobile agenda is much easier to use.
+     KEEP THE REAL MONTHLY
+     CALENDAR ON MOBILE
   */
 
-  .calendar-card > .week,
-  .calendar-card > .days{
+  .week,
+  .days{
+
+    display:grid;
+
+    grid-template-columns:
+      repeat(7,minmax(0,1fr));
+
+    width:100%;
+
+  }
+
+
+  /* -------------------------
+     MOBILE WEEKDAYS
+  ------------------------- */
+
+  .week div{
+
+    padding:9px 1px;
+
+    font-size:8px;
+
+    line-height:1;
+
+    text-align:center;
+
+    overflow:hidden;
+
+  }
+
+
+  /* -------------------------
+     MOBILE DATE CELLS
+  ------------------------- */
+
+  .cell{
+
+    min-width:0;
+
+    width:100%;
+
+    height:92px;
+
+    min-height:92px;
+
+    padding:5px 3px;
+
+    overflow:hidden;
+
+  }
+
+
+  .date{
+
+    font-size:10px;
+
+    margin-bottom:2px;
+
+  }
+
+
+  /* -------------------------
+     MOBILE EVENT
+  ------------------------- */
+
+  .event{
+
+    width:100%;
+
+    padding:4px 4px 4px 5px;
+
+    margin-top:3px;
+
+    border-radius:5px;
+
+    border-left-width:3px;
+
+    font-size:7.5px;
+
+    line-height:1.15;
+
+    overflow:hidden;
+
+    max-height:47px;
+
+  }
+
+
+  .event strong{
+
+    font-size:7.5px;
+
+    line-height:1.15;
+
+    margin-bottom:2px;
+
+    display:-webkit-box;
+
+    -webkit-box-orient:vertical;
+
+    -webkit-line-clamp:2;
+
+    overflow:hidden;
+
+  }
+
+
+  .event small{
+
     display:none;
+
   }
 
-  .mobile-agenda{
-    display:block;
+
+  /*
+     If multiple trainings
+     exist on one day
+  */
+
+  .event + .event{
+
+    margin-top:2px;
+
   }
 
-  /* TENTATIVE */
+
+  /* -------------------------
+     TENTATIVE
+  ------------------------- */
 
   .unscheduled{
+
     margin-top:10px;
+
   }
+
 
   .notice{
-    padding:12px 13px;
+
+    padding:11px 12px;
+
     border-radius:11px;
-    font-size:12px;
+
+    font-size:11.5px;
+
     margin-bottom:6px;
+
   }
 
-  /* FOOTER */
+
+  /* -------------------------
+     FOOTER
+  ------------------------- */
 
   .footer{
+
     font-size:9px;
+
     margin:12px 4px;
+
   }
+
 }
 
-/* =========================
+
+/* =========================================================
+   VERY SMALL PHONES
+========================================================= */
+
+@media(max-width:390px){
+
+  .app{
+
+    padding:6px;
+
+  }
+
+
+  .hero{
+
+    padding:16px 12px;
+
+  }
+
+
+  .hero h1{
+
+    font-size:22px;
+
+  }
+
+
+  .kpis{
+
+    gap:6px;
+
+  }
+
+
+  .kpi{
+
+    padding:10px;
+
+  }
+
+
+  .klabel{
+
+    font-size:8px;
+
+  }
+
+
+  .kvalue{
+
+    font-size:19px;
+
+  }
+
+
+  .week div{
+
+    font-size:7px;
+
+  }
+
+
+  .cell{
+
+    height:84px;
+
+    min-height:84px;
+
+    padding:4px 2px;
+
+  }
+
+
+  .date{
+
+    font-size:9px;
+
+  }
+
+
+  .event{
+
+    font-size:7px;
+
+    padding:3px;
+
+  }
+
+
+  .event strong{
+
+    font-size:7px;
+
+  }
+
+}
+
+
+/* =========================================================
    PRINT
-========================= */
+========================================================= */
 
 @media print{
 
   body{
-    background:#fff;
+
+    background:white;
+
   }
 
+
   .app{
+
     max-width:none;
+
     padding:0;
+
   }
+
 
   .toolbar,
   .download,
-  .footer,
-  .mobile-agenda{
-    display:none !important;
+  .footer{
+
+    display:none;
+
   }
 
+
   .calendar-card{
+
     box-shadow:none;
+
   }
+
 }
+
 </style>
+
 </head>
+
 
 <body>
 
-<main class="app" id="pdfArea">
 
-  <!-- =========================
-       HERO
-  ========================== -->
-
-  <section class="hero">
-
-    <div class="eyebrow">
-      LEARNING & DEVELOPMENT
-    </div>
-
-    <h1>
-      Trainer Calendar
-    </h1>
-
-    <p id="subtitle">
-      Connecting to Google Sheet…
-    </p>
-
-    <div class="toolbar">
-
-      <label>
-        TRAINER
-        <select id="trainer"></select>
-      </label>
-
-      <label>
-        MONTH
-        <select id="month"></select>
-      </label>
-
-      <button
-        class="button download"
-        id="download">
-        ↓ Download PDF
-      </button>
-
-    </div>
-
-  </section>
+<main
+  class="app"
+  id="pdfArea"
+>
 
 
-  <!-- =========================
-       KPI SECTION
-  ========================== -->
+<!-- =======================================================
+     HERO
+======================================================== -->
 
-  <section class="kpis">
-
-    <div class="kpi">
-      <div class="klabel">
-        TRAINING SESSIONS
-      </div>
-
-      <div
-        class="kvalue"
-        id="sessions">
-        0
-      </div>
-    </div>
+<section class="hero">
 
 
-    <div class="kpi">
-      <div class="klabel">
-        TRAINING HOURS
-      </div>
+  <div class="eyebrow">
 
-      <div
-        class="kvalue"
-        id="hours">
-        0 hrs
-      </div>
-    </div>
+    LEARNING & DEVELOPMENT
 
-
-    <div class="kpi">
-      <div class="klabel">
-        PARTICIPANTS
-      </div>
-
-      <div
-        class="kvalue"
-        id="participants">
-        —
-      </div>
-    </div>
-
-
-    <div class="kpi">
-
-      <div
-        class="klabel"
-        id="fourthLabel">
-        ACTIVE TRAINERS
-      </div>
-
-      <div
-        class="kvalue"
-        id="fourthValue">
-        0
-      </div>
-
-    </div>
-
-  </section>
-
-
-  <!-- =========================
-       CALENDAR
-  ========================== -->
-
-  <section class="calendar-card">
-
-    <div class="cal-top">
-
-      <div
-        class="cal-title"
-        id="calTitle">
-        September 2026
-      </div>
-
-      <div
-        class="cal-sub"
-        id="calSub">
-        Loading…
-      </div>
-
-    </div>
-
-
-    <!-- DESKTOP WEEK -->
-
-    <div class="week">
-
-      <div>MON</div>
-      <div>TUE</div>
-      <div>WED</div>
-      <div>THU</div>
-      <div>FRI</div>
-      <div>SAT</div>
-      <div>SUN</div>
-
-    </div>
-
-
-    <!-- DESKTOP CALENDAR -->
-
-    <div
-      class="days"
-      id="days">
-    </div>
-
-
-    <!-- MOBILE AGENDA -->
-
-    <div
-      class="mobile-agenda"
-      id="mobileAgenda">
-    </div>
-
-  </section>
-
-
-  <!-- =========================
-       UNSCHEDULED / TENTATIVE
-  ========================== -->
-
-  <section
-    class="unscheduled"
-    id="unscheduled">
-  </section>
-
-
-  <div class="footer">
-    Live dashboard powered by Google Sheets via Apps Script.
   </div>
+
+
+  <h1>
+
+    Trainer Calendar
+
+  </h1>
+
+
+  <p id="subtitle">
+
+    Connecting to Google Sheet…
+
+  </p>
+
+
+  <div class="toolbar">
+
+
+    <label>
+
+      TRAINER
+
+      <select id="trainer"></select>
+
+    </label>
+
+
+    <label>
+
+      MONTH
+
+      <select id="month"></select>
+
+    </label>
+
+
+    <button
+      class="button download"
+      id="download"
+    >
+
+      ↓ Download PDF
+
+    </button>
+
+
+  </div>
+
+
+</section>
+
+
+
+<!-- =======================================================
+     KPI CARDS
+======================================================== -->
+
+<section class="kpis">
+
+
+  <div class="kpi">
+
+    <div class="klabel">
+
+      TRAINING SESSIONS
+
+    </div>
+
+    <div
+      class="kvalue"
+      id="sessions"
+    >
+
+      0
+
+    </div>
+
+  </div>
+
+
+  <div class="kpi">
+
+    <div class="klabel">
+
+      TRAINING HOURS
+
+    </div>
+
+    <div
+      class="kvalue"
+      id="hours"
+    >
+
+      0 hrs
+
+    </div>
+
+  </div>
+
+
+  <div class="kpi">
+
+    <div class="klabel">
+
+      PARTICIPANTS
+
+    </div>
+
+    <div
+      class="kvalue"
+      id="participants"
+    >
+
+      —
+
+    </div>
+
+  </div>
+
+
+  <div class="kpi">
+
+    <div
+      class="klabel"
+      id="fourthLabel"
+    >
+
+      ACTIVE TRAINERS
+
+    </div>
+
+    <div
+      class="kvalue"
+      id="fourthValue"
+    >
+
+      0
+
+    </div>
+
+  </div>
+
+
+</section>
+
+
+
+<!-- =======================================================
+     CALENDAR
+======================================================== -->
+
+<section class="calendar-card">
+
+
+  <div class="cal-top">
+
+
+    <div
+      class="cal-title"
+      id="calTitle"
+    >
+
+      September 2026
+
+    </div>
+
+
+    <div
+      class="cal-sub"
+      id="calSub"
+    >
+
+      Loading…
+
+    </div>
+
+
+  </div>
+
+
+
+  <!-- WEEKDAYS -->
+
+  <div class="week">
+
+    <div>MON</div>
+
+    <div>TUE</div>
+
+    <div>WED</div>
+
+    <div>THU</div>
+
+    <div>FRI</div>
+
+    <div>SAT</div>
+
+    <div>SUN</div>
+
+  </div>
+
+
+
+  <!-- CALENDAR DATES -->
+
+  <div
+    class="days"
+    id="days"
+  ></div>
+
+
+</section>
+
+
+
+<!-- =======================================================
+     UNSCHEDULED
+======================================================== -->
+
+<section
+  class="unscheduled"
+  id="unscheduled"
+></section>
+
+
+
+<div class="footer">
+
+  Live dashboard powered by Google Sheets via Apps Script.
+
+</div>
+
 
 </main>
 
 
+
 <script>
+
 
 /* =========================================================
    GOOGLE SHEET API
@@ -720,12 +1338,14 @@ const API_URL =
 
 let records = [];
 
-const $ = id =>
+
+const $ =
+  id =>
   document.getElementById(id);
 
 
 /* =========================================================
-   SECURITY / HTML ESCAPE
+   ESCAPE HTML
 ========================================================= */
 
 function esc(v){
@@ -757,25 +1377,36 @@ function cleanMonth(
   const s =
     String(v || '').trim();
 
+
   const m =
     s.match(
       /(January|February|March|April|May|June|July|August|September|October|November|December)\s*[-\/]?\s*(\d{4})?/i
     );
 
-  return m
-    ? m[1].replace(
-        /^./,
-        x => x.toUpperCase()
-      ) +
-      ' ' +
-      (m[2] || '2026')
-    : fallback;
+
+  if(!m){
+
+    return fallback;
+
+  }
+
+
+  return (
+    m[1].replace(
+      /^./,
+      x => x.toUpperCase()
+    )
+    +
+    ' '
+    +
+    (m[2] || '2026')
+  );
 
 }
 
 
 /* =========================================================
-   CALCULATE HOURS
+   HOURS CALCULATOR
 ========================================================= */
 
 function hoursFromTime(t){
@@ -785,27 +1416,41 @@ function hoursFromTime(t){
       .toLowerCase()
       .replace(/\s+/g,' ');
 
+
   const m =
     s.match(
       /(\d{1,2})(?::(\d{2}))?\s*(am|pm)?\s*(?:to|[-–—])\s*(\d{1,2})(?::(\d{2}))?\s*(am|pm)?/
     );
 
-  if(!m)
+
+  if(!m){
+
     return 0;
+
+  }
+
 
   let a =
     +m[1] +
     (+m[2] || 0) / 60;
 
+
   let b =
     +m[4] +
     (+m[5] || 0) / 60;
 
+
   let ap = m[3];
+
   let bp = m[6];
 
-  if(!bp)
+
+  if(!bp){
+
     bp = ap;
+
+  }
+
 
   if(!ap && bp){
 
@@ -813,35 +1458,52 @@ function hoursFromTime(t){
       bp === 'am'
         ? 'am'
         : (
-            +m[4] === 12 ||
-            +m[4] < +m[1]
-              ? 'am'
-              : 'pm'
-          );
+          +m[4] === 12 ||
+          +m[4] < +m[1]
+            ? 'am'
+            : 'pm'
+        );
 
   }
 
-  if(ap === 'pm' && a < 12)
+
+  if(ap === 'pm' && a < 12){
+
     a += 12;
 
-  if(ap === 'am' && a === 12)
+  }
+
+
+  if(ap === 'am' && a === 12){
+
     a = 0;
 
-  if(bp === 'pm' && b < 12)
+  }
+
+
+  if(bp === 'pm' && b < 12){
+
     b += 12;
 
-  if(bp === 'am' && b === 12)
+  }
+
+
+  if(bp === 'am' && b === 12){
+
     b = 0;
 
+  }
+
+
   return b > a
-    ? b - a
+    ? b-a
     : 0;
 
 }
 
 
 /* =========================================================
-   PARSE TRAINING DATES
+   PARSE DAYS
 ========================================================= */
 
 function parseDays(
@@ -852,35 +1514,45 @@ function parseDays(
   const s =
     String(value || '').trim();
 
+
   /*
-    Tentative / unscheduled
+    No scheduled date
   */
 
   if(
     !s ||
     /date to be finalized|tentative/i.test(s)
   ){
+
     return [];
+
   }
 
 
   const base =
-    new Date(month + ' 1');
+    new Date(
+      month + ' 1'
+    );
+
 
   if(
     Number.isNaN(
       base.getTime()
     )
   ){
+
     return [];
+
   }
 
 
   const y =
     base.getFullYear();
 
+
   const mo =
     base.getMonth();
+
 
   const last =
     new Date(
@@ -894,20 +1566,24 @@ function parseDays(
 
 
   const ord = {
+
     first:1,
     second:2,
     third:3,
     fourth:4,
     fifth:5,
+
     '1st':1,
     '2nd':2,
     '3rd':3,
     '4th':4,
     '5th':5
+
   };
 
 
   const wd = {
+
     sunday:0,
     monday:1,
     tuesday:2,
@@ -915,6 +1591,7 @@ function parseDays(
     thursday:4,
     friday:5,
     saturday:6
+
   };
 
 
@@ -926,9 +1603,7 @@ function parseDays(
 
 
   /*
-    First Monday
-    Second Tuesday
-    etc.
+    First Monday etc.
   */
 
   for(
@@ -954,8 +1629,14 @@ function parseDays(
 
         ordinal = true;
 
+
         const first =
-          new Date(y,mo,1);
+          new Date(
+            y,
+            mo,
+            1
+          );
+
 
         const offset =
           (
@@ -964,13 +1645,18 @@ function parseDays(
             7
           ) % 7;
 
+
         const day =
           1 +
           offset +
-          (num - 1) * 7;
+          (num-1)*7;
 
-        if(day <= last)
+
+        if(day <= last){
+
           out.push(day);
+
+        }
 
       }
 
@@ -980,7 +1666,7 @@ function parseDays(
 
 
   /*
-    Every Monday / weekly Monday
+    Every Monday etc.
   */
 
   if(
@@ -1009,7 +1695,8 @@ function parseDays(
               mo,
               d
             ).getDay()
-            === wd[w]
+            ===
+            wd[w]
           ){
 
             out.push(d);
@@ -1042,21 +1729,27 @@ function parseDays(
     ) || [];
 
 
-  explicit.forEach(n => {
+  explicit.forEach(
+    n => {
 
-    const d =
-      parseInt(n,10);
+      const d =
+        parseInt(
+          n,
+          10
+        );
 
-    if(
-      d >= 1 &&
-      d <= last
-    ){
 
-      out.push(d);
+      if(
+        d >= 1 &&
+        d <= last
+      ){
+
+        out.push(d);
+
+      }
 
     }
-
-  });
+  );
 
 
   /*
@@ -1079,7 +1772,8 @@ function parseDays(
           y,
           mo,
           d
-        ).getDay() === 6
+        ).getDay()
+        === 6
       ){
 
         out.push(d);
@@ -1101,13 +1795,16 @@ function parseDays(
 
 
 /* =========================================================
-   EXPAND RECURRING / MULTIPLE-DATE RECORDS
+   EXPAND RECORDS
 ========================================================= */
 
 function expanded(){
 
   const out = [];
-  const seen = new Set();
+
+  const seen =
+    new Set();
+
 
   for(
     const r
@@ -1115,7 +1812,10 @@ function expanded(){
   ){
 
     const month =
-      cleanMonth(r.month);
+      cleanMonth(
+        r.month
+      );
+
 
     const days =
       parseDays(
@@ -1130,11 +1830,13 @@ function expanded(){
     ){
 
       const key = [
+
         r.trainer,
         r.trainingName,
         month,
         day,
         r.time
+
       ]
       .map(
         x =>
@@ -1149,21 +1851,28 @@ function expanded(){
 
       if(
         seen.has(key)
-      )
+      ){
+
         continue;
+
+      }
 
 
       seen.add(key);
 
 
       out.push({
+
         ...r,
+
         day
+
       });
 
     }
 
   }
+
 
   return out;
 
@@ -1171,29 +1880,48 @@ function expanded(){
 
 
 /* =========================================================
-   INITIALIZE DROPDOWNS
+   INITIALIZE
 ========================================================= */
 
 function init(){
 
+  /*
+    Trainers
+  */
+
   const trainers = [
+
     'All Trainers',
+
     ...new Set(
       records
-        .map(r => r.trainer)
+        .map(
+          r => String(
+            r.trainer || ''
+          ).trim()
+        )
         .filter(Boolean)
     )
+
   ];
 
 
+  /*
+    Months
+  */
+
   const months = [
+
     ...new Set(
       records
         .map(
           r =>
-            cleanMonth(r.month)
+            cleanMonth(
+              r.month
+            )
         )
     )
+
   ]
   .sort(
     (a,b) =>
@@ -1203,7 +1931,7 @@ function init(){
 
 
   /*
-    Always keep September 2026 available
+    Always allow September 2026
   */
 
   if(
@@ -1219,20 +1947,28 @@ function init(){
   }
 
 
+  /*
+    Trainer dropdown
+  */
+
   $('trainer').innerHTML =
     trainers
       .map(
         x =>
-          `<option>${esc(x)}</option>`
+          `<option value="${esc(x)}">${esc(x)}</option>`
       )
       .join('');
 
+
+  /*
+    Month dropdown
+  */
 
   $('month').innerHTML =
     months
       .map(
         x =>
-          `<option>${esc(x)}</option>`
+          `<option value="${esc(x)}">${esc(x)}</option>`
       )
       .join('');
 
@@ -1241,23 +1977,36 @@ function init(){
     Default month
   */
 
-  $('month').value =
-    'September 2026';
+  if(
+    months.includes(
+      'September 2026'
+    )
+  ){
 
+    $('month').value =
+      'September 2026';
+
+  }
+
+
+  /*
+    Filter events
+  */
 
   $('trainer').onchange =
     update;
+
 
   $('month').onchange =
     update;
 
 
   /*
-    PDF download
+    PDF
   */
 
   $('download').onclick =
-    () => {
+    function(){
 
       html2pdf()
         .from(
@@ -1291,38 +2040,45 @@ function init(){
 
 
 /* =========================================================
-   CENTRALIZED FILTER
+   FILTER DATA
 ========================================================= */
 
 function getFilteredRecords(){
 
-  const t =
-    $('trainer').value;
+  const trainer =
+    String(
+      $('trainer').value || ''
+    ).trim();
 
-  const m =
+
+  const month =
     $('month').value;
 
 
   return records.filter(
     r => {
 
-      const monthMatch =
-        cleanMonth(r.month)
-        === m;
+      const recordMonth =
+        cleanMonth(
+          r.month
+        );
 
 
-      const trainerMatch =
-        t === 'All Trainers' ||
+      const recordTrainer =
         String(
           r.trainer || ''
-        ).trim()
-        ===
-        String(t).trim();
+        ).trim();
 
 
       return (
-        monthMatch &&
-        trainerMatch
+
+        recordMonth === month &&
+
+        (
+          trainer === 'All Trainers' ||
+          recordTrainer === trainer
+        )
+
       );
 
     }
@@ -1337,16 +2093,18 @@ function getFilteredRecords(){
 
 function update(){
 
-  const t =
-    $('trainer').value;
+  const trainer =
+    String(
+      $('trainer').value || ''
+    ).trim();
 
-  const m =
+
+  const month =
     $('month').value;
 
 
   /*
-    All records for selected
-    trainer + month
+    Filter base records
   */
 
   const base =
@@ -1362,17 +2120,18 @@ function update(){
       r => {
 
         const monthMatch =
-          cleanMonth(r.month)
-          === m;
+          cleanMonth(
+            r.month
+          ) === month;
 
 
         const trainerMatch =
-          t === 'All Trainers' ||
+          trainer === 'All Trainers' ||
           String(
             r.trainer || ''
           ).trim()
           ===
-          String(t).trim();
+          trainer;
 
 
         return (
@@ -1385,14 +2144,16 @@ function update(){
 
 
   /*
-    Hours
+    Training hours
   */
 
   const hrs =
     events.reduce(
-      (a,e) =>
-        a +
-        hoursFromTime(e.time),
+      (total,event) =>
+        total +
+        hoursFromTime(
+          event.time
+        ),
       0
     );
 
@@ -1401,11 +2162,11 @@ function update(){
     Participants
   */
 
-  const part =
+  const participants =
     base.reduce(
-      (a,r) =>
-        a +
-        (
+      (total,r) => {
+
+        const number =
           parseInt(
             String(
               r.participants || ''
@@ -1415,14 +2176,18 @@ function update(){
               ''
             ),
             10
-          ) || 0
-        ),
+          ) || 0;
+
+
+        return total + number;
+
+      },
       0
     );
 
 
   /*
-    KPI updates
+    KPIs
   */
 
   $('sessions').textContent =
@@ -1434,30 +2199,44 @@ function update(){
       Math.round(
         hrs * 10
       ) / 10
-    ) +
+    )
+    +
     ' hrs';
 
 
   $('participants').textContent =
-    part || '—';
+    participants || '—';
 
+
+  /*
+    Trainer KPI
+  */
 
   $('fourthLabel').textContent =
-    t === 'All Trainers'
+    trainer === 'All Trainers'
       ? 'ACTIVE TRAINERS'
       : 'TRAINER';
 
 
   $('fourthValue').textContent =
-    t === 'All Trainers'
-      ? new Set(
-          base
-            .map(
-              r => r.trainer
-            )
-            .filter(Boolean)
-        ).size
-      : t;
+    trainer === 'All Trainers'
+
+      ?
+
+      new Set(
+        base
+          .map(
+            r =>
+              String(
+                r.trainer || ''
+              ).trim()
+          )
+          .filter(Boolean)
+      ).size
+
+      :
+
+      trainer;
 
 
   /*
@@ -1466,17 +2245,17 @@ function update(){
 
   $('subtitle').textContent =
     'Live Google Sheet · ' +
-    m +
+    month +
     ' · ' +
-    t;
+    trainer;
 
 
   $('calTitle').textContent =
-    m;
+    month;
 
 
   $('calSub').textContent =
-    t;
+    trainer;
 
 
   /*
@@ -1485,7 +2264,7 @@ function update(){
 
   renderCalendar(
     events,
-    m
+    month
   );
 
 
@@ -1497,167 +2276,217 @@ function update(){
 
 
 /* =========================================================
-   CALENDAR RENDERER
+   RENDER CALENDAR
 ========================================================= */
 
 function renderCalendar(
   events,
-  m
+  month
 ){
 
-  const d =
+  const date =
     new Date(
-      m + ' 1'
+      month + ' 1'
     );
 
 
-  const y =
-    d.getFullYear();
-
-  const mo =
-    d.getMonth();
+  const year =
+    date.getFullYear();
 
 
-  const first =
+  const monthIndex =
+    date.getMonth();
+
+
+  /*
+    Monday = 0
+    Sunday = 6
+  */
+
+  const firstDay =
     (
-      d.getDay() + 6
+      date.getDay() + 6
     ) % 7;
 
 
-  const last =
+  const lastDay =
     new Date(
-      y,
-      mo + 1,
+      year,
+      monthIndex + 1,
       0
     ).getDate();
 
 
-  const cells =
+  const totalCells =
     Math.ceil(
-      (first + last) / 7
+      (
+        firstDay +
+        lastDay
+      ) / 7
     ) * 7;
-
-
-  const by = {};
 
 
   /*
     Group events by date
   */
 
+  const byDay = {};
+
+
   events.forEach(
-    e =>
-      (
-        by[e.day] ??= []
-      ).push(e)
+    event => {
+
+      if(
+        !byDay[event.day]
+      ){
+
+        byDay[event.day] = [];
+
+      }
+
+
+      byDay[event.day].push(
+        event
+      );
+
+    }
   );
 
 
-  /* =======================================================
-     DESKTOP CALENDAR
-  ======================================================= */
+  /*
+    Clear calendar
+  */
 
   $('days').innerHTML = '';
 
 
+  /*
+    Build calendar
+  */
+
   for(
     let i=0;
-    i<cells;
+    i<totalCells;
     i++
   ){
 
     const day =
       i -
-      first +
+      firstDay +
       1;
 
 
-    const c =
+    const cell =
       document.createElement(
         'div'
       );
 
 
-    c.className =
+    cell.className =
       'cell';
 
 
     /*
-      Empty cells
+      Previous/next month cells
     */
 
     if(
       day < 1 ||
-      day > last
+      day > lastDay
     ){
 
-      c.classList.add(
+      cell.classList.add(
         'muted'
       );
 
+
       $('days').appendChild(
-        c
+        cell
       );
+
 
       continue;
 
     }
 
 
-    c.innerHTML =
-      `<div class="date">${day}</div>`;
+    /*
+      Date number
+    */
+
+    cell.innerHTML =
+      `
+      <div class="date">
+        ${day}
+      </div>
+      `;
 
 
-    (
-      by[day] || []
-    ).forEach(
-      (e,j) => {
+    /*
+      Events
+    */
+
+    const dayEvents =
+      byDay[day] || [];
+
+
+    dayEvents.forEach(
+      (event,index) => {
 
         const colors = [
+
           '#3e7ca1',
           '#43a99b',
           '#efaa55',
           '#9b78c5'
+
         ];
 
 
-        const backs = [
+        const backgrounds = [
+
           '#eaf3ff',
           '#e9f8f3',
           '#fff2e3',
           '#f4ebfa'
+
         ];
 
 
-        const div =
+        const eventDiv =
           document.createElement(
             'div'
           );
 
 
-        div.className =
+        eventDiv.className =
           'event';
 
 
-        div.style.borderLeftColor =
-          colors[j % 4];
+        eventDiv.style.borderLeftColor =
+          colors[
+            index % colors.length
+          ];
 
 
-        div.style.background =
-          backs[j % 4];
+        eventDiv.style.background =
+          backgrounds[
+            index % backgrounds.length
+          ];
 
 
-        div.innerHTML =
+        eventDiv.innerHTML =
           `
+
           <strong>
             ${esc(
-              e.trainingName ||
+              event.trainingName ||
               'Training'
             )}
           </strong>
 
           ${esc(
-            e.time ||
+            event.time ||
             'Time not set'
           )}
 
@@ -1665,211 +2494,52 @@ function renderCalendar(
 
           <small>
             ${esc(
-              e.trainer || ''
+              event.trainer ||
+              ''
             )}
-            ·
-            ${esc(
-              e.mode || ''
-            )}
+
+            ${
+              event.mode
+                ? ' · ' +
+                  esc(event.mode)
+                : ''
+            }
+
           </small>
+
           `;
 
 
-        c.appendChild(
-          div
+        cell.appendChild(
+          eventDiv
         );
 
       }
     );
 
 
+    /*
+      Add cell
+    */
+
     $('days').appendChild(
-      c
+      cell
     );
 
   }
-
-
-  /* =======================================================
-     MOBILE AGENDA
-  ======================================================= */
-
-  let agenda =
-    $('mobileAgenda');
-
-
-  const dayKeys =
-    Object.keys(by)
-      .map(Number)
-      .sort(
-        (a,b) => a-b
-      );
-
-
-  /*
-    No sessions
-  */
-
-  if(
-    !dayKeys.length
-  ){
-
-    agenda.innerHTML =
-      `
-      <div class="mobile-empty">
-        No scheduled training sessions for this month.
-      </div>
-      `;
-
-    return;
-
-  }
-
-
-  const names = [
-    'Sunday',
-    'Monday',
-    'Tuesday',
-    'Wednesday',
-    'Thursday',
-    'Friday',
-    'Saturday'
-  ];
-
-
-  agenda.innerHTML =
-    dayKeys
-      .map(
-        day => {
-
-          const dt =
-            new Date(
-              y,
-              mo,
-              day
-            );
-
-
-          const label =
-            dt.toLocaleDateString(
-              'en-IN',
-              {
-                day:'numeric',
-                month:'short'
-              }
-            );
-
-
-          const cards =
-            (
-              by[day] || []
-            )
-            .map(
-              (e,j) => {
-
-                const colors = [
-                  '#3e7ca1',
-                  '#43a99b',
-                  '#efaa55',
-                  '#9b78c5'
-                ];
-
-
-                const backs = [
-                  '#eaf3ff',
-                  '#e9f8f3',
-                  '#fff2e3',
-                  '#f4ebfa'
-                ];
-
-
-                return `
-                <div
-                  class="mobile-event"
-                  style="
-                    border-left-color:${colors[j%4]};
-                    background:${backs[j%4]};
-                  "
-                >
-
-                  <strong>
-                    ${esc(
-                      e.trainingName ||
-                      'Training'
-                    )}
-                  </strong>
-
-                  <div class="meta">
-
-                    ${esc(
-                      e.time ||
-                      'Time not set'
-                    )}
-
-                    ${
-                      e.mode
-                        ? ' · ' +
-                          esc(e.mode)
-                        : ''
-                    }
-
-                    ${
-                      e.trainer
-                        ? ' · ' +
-                          esc(e.trainer)
-                        : ''
-                    }
-
-                  </div>
-
-                </div>
-                `;
-
-              }
-            )
-            .join('');
-
-
-          return `
-          <div class="mobile-day">
-
-            <div class="mobile-day-head">
-
-              <div class="mobile-day-date">
-                ${label}
-              </div>
-
-              <div class="mobile-day-name">
-                ${
-                  names[
-                    dt.getDay()
-                  ].toUpperCase()
-                }
-              </div>
-
-            </div>
-
-            ${cards}
-
-          </div>
-          `;
-
-        }
-      )
-      .join('');
 
 }
 
 
 /* =========================================================
-   TENTATIVE / UNSCHEDULED
+   UNSCHEDULED / TENTATIVE
 ========================================================= */
 
 function renderUnscheduled(
   rows
 ){
 
-  const x =
+  const tentative =
     rows.filter(
       r =>
         parseDays(
@@ -1881,52 +2551,71 @@ function renderUnscheduled(
     );
 
 
+  if(
+    !tentative.length
+  ){
+
+    $('unscheduled').innerHTML =
+      '';
+
+    return;
+
+  }
+
+
+  let html =
+    `
+
+    <div class="notice">
+
+      <strong>
+        Unscheduled / tentative ·
+        ${tentative.length}
+      </strong>
+
+    </div>
+
+    `;
+
+
+  tentative.forEach(
+    r => {
+
+      html +=
+        `
+
+        <div class="notice">
+
+          <strong>
+            ${esc(
+              r.trainingName ||
+              'Training'
+            )}
+          </strong>
+
+          <br>
+
+          ${esc(
+            r.date ||
+            'Date to be finalized'
+          )}
+
+        </div>
+
+        `;
+
+    }
+  );
+
+
   $('unscheduled').innerHTML =
-    x.length
-      ?
-      `
-      <div class="notice">
-
-        <strong>
-          Unscheduled / tentative · ${x.length}
-        </strong>
-
-      </div>
-
-      ` +
-
-      x
-        .map(
-          r =>
-            `
-            <div class="notice">
-
-              <strong>
-                ${esc(
-                  r.trainingName ||
-                  'Training'
-                )}
-              </strong>
-
-              <br>
-
-              ${esc(
-                r.date ||
-                'Date to be finalized'
-              )}
-
-            </div>
-            `
-        )
-        .join('')
-
-      : '';
+    html;
 
 }
 
 
 /* =========================================================
-   LOAD GOOGLE SHEET
+   LOAD DATA
 ========================================================= */
 
 async function load(){
@@ -1937,7 +2626,7 @@ async function load(){
       'Connecting to Google Sheet…';
 
 
-    const res =
+    const response =
       await fetch(
         API_URL +
         '?t=' +
@@ -1948,21 +2637,31 @@ async function load(){
       );
 
 
-    if(!res.ok)
+    if(
+      !response.ok
+    ){
+
       throw new Error(
         'API ' +
-        res.status
+        response.status
       );
+
+    }
 
 
     const data =
-      await res.json();
+      await response.json();
 
 
-    if(!data.success)
+    if(
+      !data.success
+    ){
+
       throw new Error(
         'API error'
       );
+
+    }
 
 
     records =
@@ -1977,9 +2676,11 @@ async function load(){
 
   }
 
-  catch(e){
+  catch(error){
 
-    console.error(e);
+    console.error(
+      error
+    );
 
 
     $('subtitle').textContent =
@@ -1996,7 +2697,9 @@ async function load(){
 
 load();
 
+
 </script>
 
 </body>
+
 </html>
