@@ -373,8 +373,7 @@ select{
    WEEK HEADER
 ========================================================= */
 
-.week,
-.days{
+.week{
 
   display:grid;
 
@@ -383,6 +382,18 @@ select{
 
   width:100%;
 
+}
+
+.calendar-weeks{
+  width:100%;
+}
+
+.calendar-week{
+  display:grid;
+  grid-template-columns:repeat(7,minmax(0,1fr));
+  width:100%;
+  gap:1px;
+  background:#e1e6ea;
 }
 
 
@@ -410,19 +421,12 @@ select{
 ========================================================= */
 
 .cell{
-
+  min-width:0;
   min-height:135px;
-
-  padding:8px;
-
-  border-right:1px solid #edf0f2;
-
-  border-bottom:1px solid #edf0f2;
-
-  background:white;
-
+  padding:9px;
+  background:#fff;
   overflow:hidden;
-
+  position:relative;
 }
 
 
@@ -758,8 +762,7 @@ select{
      CALENDAR ON MOBILE
   */
 
-  .week,
-  .days{
+  .calendar-week{
 
     display:grid;
 
@@ -767,7 +770,14 @@ select{
       repeat(7,minmax(0,1fr));
 
     width:100%;
+    gap:1px;
+    background:#dfe5ea;
+  }
 
+  .calendar-weeks{
+    display:block;
+    width:100%;
+    background:#dfe5ea;
   }
 
 
@@ -795,19 +805,13 @@ select{
   ------------------------- */
 
   .cell{
-
     min-width:0;
-
     width:100%;
-
-    height:92px;
-
-    min-height:92px;
-
-    padding:5px 3px;
-
+    height:104px;
+    min-height:104px;
+    padding:6px 4px;
+    background:#fff;
     overflow:hidden;
-
   }
 
 
@@ -987,13 +991,9 @@ select{
 
 
   .cell{
-
-    height:84px;
-
-    min-height:84px;
-
-    padding:4px 2px;
-
+    height:96px;
+    min-height:96px;
+    padding:5px 3px;
   }
 
 
@@ -1021,6 +1021,112 @@ select{
 
 }
 
+
+/* =========================================================
+   FINAL CALENDAR MOBILE DESIGN
+========================================================= */
+.event-time{
+  display:block;
+  margin-top:2px;
+  color:#60727f;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.more-events{
+  display:block;
+  text-align:center;
+  font-size:9px;
+  font-weight:800;
+  color:#60727f;
+  margin-top:4px;
+}
+
+@media(max-width:760px){
+  .calendar-card{ overflow:hidden; }
+  .week{
+    display:grid !important;
+    grid-template-columns:repeat(7,minmax(0,1fr)) !important;
+    width:100% !important;
+  }
+  .calendar-weeks{
+    display:block !important;
+    width:100% !important;
+    background:#dfe5ea !important;
+  }
+  .calendar-week{
+    display:grid !important;
+    grid-template-columns:repeat(7,minmax(0,1fr)) !important;
+    width:100% !important;
+    gap:1px !important;
+    background:#dfe5ea !important;
+  }
+  .calendar-week .cell{
+    min-width:0 !important;
+    width:100% !important;
+    height:104px !important;
+    min-height:104px !important;
+    padding:6px 4px !important;
+    background:#fff !important;
+    border:0 !important;
+    overflow:hidden !important;
+  }
+  .calendar-week .cell.muted{ background:#f6f8fa !important; }
+  .calendar-week .date{
+    width:24px !important;
+    height:24px !important;
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    border-radius:50% !important;
+    background:#f0f3f5 !important;
+    font-size:10px !important;
+    margin:0 0 5px !important;
+  }
+  .calendar-week .event{
+    width:100% !important;
+    max-height:31px !important;
+    min-height:0 !important;
+    padding:4px 4px 4px 5px !important;
+    margin:3px 0 0 !important;
+    border-radius:6px !important;
+    font-size:7px !important;
+    line-height:1.1 !important;
+  }
+  .calendar-week .event strong{
+    display:block !important;
+    font-size:7px !important;
+    white-space:nowrap !important;
+    overflow:hidden !important;
+    text-overflow:ellipsis !important;
+    margin:0 !important;
+  }
+  .calendar-week .event-time{
+    display:block !important;
+    font-size:6px !important;
+    white-space:nowrap !important;
+    overflow:hidden !important;
+    text-overflow:ellipsis !important;
+  }
+  .calendar-week .more-events{
+    font-size:6px !important;
+    margin-top:3px !important;
+  }
+}
+
+@media(max-width:390px){
+  .calendar-week .cell{
+    height:96px !important;
+    min-height:96px !important;
+    padding:5px 3px !important;
+  }
+  .calendar-week .date{
+    width:22px !important;
+    height:22px !important;
+    font-size:9px !important;
+  }
+}
 
 /* =========================================================
    PRINT
@@ -1061,34 +1167,6 @@ select{
 
 }
 
-
-/* FINAL MOBILE CALENDAR OVERRIDE */
-@media (max-width:760px){
-  .app{padding:6px!important;max-width:none!important}
-  .hero{padding:16px 12px 14px!important;border-radius:16px!important}
-  .hero h1{font-size:22px!important;line-height:1.15!important}
-  .toolbar{display:grid!important;grid-template-columns:1fr!important;gap:8px!important}
-  select,.button{width:100%!important;min-width:0!important;min-height:42px!important}
-  .kpis{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:6px!important;margin:10px 0!important}
-  .kpi{padding:10px!important;border-radius:12px!important}
-  .klabel{font-size:7.5px!important}
-  .kvalue{font-size:18px!important}
-  .calendar-card{width:100%!important;border-radius:13px!important;overflow:hidden!important}
-  .cal-top{padding:12px!important}
-  .week,.days{display:grid!important;grid-template-columns:repeat(7,minmax(0,1fr))!important;width:100%!important;min-width:0!important}
-  .week div{min-width:0!important;padding:8px 0!important;font-size:7px!important;white-space:nowrap!important;overflow:hidden!important}
-  .cell{min-width:0!important;width:100%!important;height:82px!important;min-height:82px!important;padding:4px 2px!important;overflow:hidden!important}
-  .date{font-size:9px!important;margin:0 0 4px!important}
-  .event{min-width:0!important;width:100%!important;padding:4px 3px!important;margin-top:2px!important;border-radius:5px!important;font-size:6.5px!important;line-height:1.1!important;overflow:hidden!important}
-  .event strong{display:block!important;font-size:6.8px!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
-  .event small{display:none!important}
-}
-@media (max-width:390px){
-  .cell{height:78px!important;min-height:78px!important}
-  .week div{font-size:6.5px!important}
-  .event{font-size:6px!important;padding:3px 2px!important}
-  .event strong{font-size:6.3px!important}
-}
 </style>
 
 </head>
@@ -1321,10 +1399,7 @@ select{
 
   <!-- CALENDAR DATES -->
 
-  <div
-    class="days"
-    id="days"
-  ></div>
+  <div class="calendar-weeks" id="days"></div>
 
 
 </section>
@@ -2307,261 +2382,75 @@ function update(){
    RENDER CALENDAR
 ========================================================= */
 
-function renderCalendar(
-  events,
-  month
-){
-
-  const date =
-    new Date(
-      month + ' 1'
-    );
-
-
-  const year =
-    date.getFullYear();
-
-
-  const monthIndex =
-    date.getMonth();
-
-
-  /*
-    Monday = 0
-    Sunday = 6
-  */
-
-  const firstDay =
-    (
-      date.getDay() + 6
-    ) % 7;
-
-
-  const lastDay =
-    new Date(
-      year,
-      monthIndex + 1,
-      0
-    ).getDate();
-
-
-  const totalCells =
-    Math.ceil(
-      (
-        firstDay +
-        lastDay
-      ) / 7
-    ) * 7;
-
-
-  /*
-    Group events by date
-  */
+function renderCalendar(events, month){
+  const date = new Date(month + ' 1');
+  const year = date.getFullYear();
+  const monthIndex = date.getMonth();
+  const firstDay = (date.getDay() + 6) % 7;
+  const lastDay = new Date(year, monthIndex + 1, 0).getDate();
+  const totalCells = Math.ceil((firstDay + lastDay) / 7) * 7;
 
   const byDay = {};
+  events.forEach(event => {
+    if(!byDay[event.day]) byDay[event.day] = [];
+    byDay[event.day].push(event);
+  });
 
+  const container = $('days');
+  container.innerHTML = '';
+  container.className = 'calendar-weeks';
 
-  events.forEach(
-    event => {
+  const colors = ['#3e7ca1','#43a99b','#efaa55','#9b78c5'];
+  const backgrounds = ['#eaf3ff','#e9f8f3','#fff2e3','#f4ebfa'];
 
-      if(
-        !byDay[event.day]
-      ){
+  for(let weekStart = 0; weekStart < totalCells; weekStart += 7){
+    const week = document.createElement('div');
+    week.className = 'calendar-week';
 
-        byDay[event.day] = [];
+    for(let offset = 0; offset < 7; offset++){
+      const i = weekStart + offset;
+      const day = i - firstDay + 1;
+      const cell = document.createElement('div');
+      cell.className = 'cell';
 
+      if(day < 1 || day > lastDay){
+        cell.classList.add('muted');
+        week.appendChild(cell);
+        continue;
       }
 
+      const dateNumber = document.createElement('div');
+      dateNumber.className = 'date';
+      dateNumber.textContent = day;
+      cell.appendChild(dateNumber);
 
-      byDay[event.day].push(
-        event
-      );
+      const dayEvents = byDay[day] || [];
+      dayEvents.slice(0,3).forEach((event,index) => {
+        const eventDiv = document.createElement('div');
+        eventDiv.className = 'event';
+        eventDiv.style.borderLeftColor = colors[index % colors.length];
+        eventDiv.style.background = backgrounds[index % backgrounds.length];
+        eventDiv.title = `${event.trainingName || 'Training'} · ${event.time || 'Time not set'}${event.trainer ? ' · ' + event.trainer : ''}`;
+        eventDiv.innerHTML = `
+          <strong>${esc(event.trainingName || 'Training')}</strong>
+          <span class="event-time">${esc(event.time || 'Time not set')}</span>
+        `;
+        cell.appendChild(eventDiv);
+      });
 
-    }
-  );
-
-
-  /*
-    Clear calendar
-  */
-
-  $('days').innerHTML = '';
-
-
-  /*
-    Build calendar
-  */
-
-  for(
-    let i=0;
-    i<totalCells;
-    i++
-  ){
-
-    const day =
-      i -
-      firstDay +
-      1;
-
-
-    const cell =
-      document.createElement(
-        'div'
-      );
-
-
-    cell.className =
-      'cell';
-
-
-    /*
-      Previous/next month cells
-    */
-
-    if(
-      day < 1 ||
-      day > lastDay
-    ){
-
-      cell.classList.add(
-        'muted'
-      );
-
-
-      $('days').appendChild(
-        cell
-      );
-
-
-      continue;
-
-    }
-
-
-    /*
-      Date number
-    */
-
-    cell.innerHTML =
-      `
-      <div class="date">
-        ${day}
-      </div>
-      `;
-
-
-    /*
-      Events
-    */
-
-    const dayEvents =
-      byDay[day] || [];
-
-
-    dayEvents.forEach(
-      (event,index) => {
-
-        const colors = [
-
-          '#3e7ca1',
-          '#43a99b',
-          '#efaa55',
-          '#9b78c5'
-
-        ];
-
-
-        const backgrounds = [
-
-          '#eaf3ff',
-          '#e9f8f3',
-          '#fff2e3',
-          '#f4ebfa'
-
-        ];
-
-
-        const eventDiv =
-          document.createElement(
-            'div'
-          );
-
-
-        eventDiv.className =
-          'event';
-
-
-        eventDiv.style.borderLeftColor =
-          colors[
-            index % colors.length
-          ];
-
-
-        eventDiv.style.background =
-          backgrounds[
-            index % backgrounds.length
-          ];
-
-
-        eventDiv.innerHTML =
-          `
-
-          <strong>
-            ${esc(
-              event.trainingName ||
-              'Training'
-            )}
-          </strong>
-
-          ${esc(
-            event.time ||
-            'Time not set'
-          )}
-
-          <br>
-
-          <small>
-            ${esc(
-              event.trainer ||
-              ''
-            )}
-
-            ${
-              event.mode
-                ? ' · ' +
-                  esc(event.mode)
-                : ''
-            }
-
-          </small>
-
-          `;
-
-
-        cell.appendChild(
-          eventDiv
-        );
-
+      if(dayEvents.length > 3){
+        const more = document.createElement('div');
+        more.className = 'more-events';
+        more.textContent = `+${dayEvents.length - 3} more`;
+        cell.appendChild(more);
       }
-    );
 
-
-    /*
-      Add cell
-    */
-
-    $('days').appendChild(
-      cell
-    );
-
+      week.appendChild(cell);
+    }
+    container.appendChild(week);
   }
-
 }
 
-
-/* =========================================================
-   UNSCHEDULED / TENTATIVE
-========================================================= */
 
 function renderUnscheduled(
   rows
